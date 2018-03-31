@@ -1,0 +1,32 @@
+#jinja2: lstrip_blocks: "true"
+<config>
+  <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+
+    <enable>
+      <secret>
+        <type>0</type>
+        <secret>{{ cvd_enable_secret }}</secret>
+      </secret>
+    </enable>
+
+    {% for item in cvd_local_accounts %}
+    <username>
+      <name>{{ item.username }}</name>
+      <privilege>{{ item.privilege }}</privilege>
+      <secret>
+        <encryption>0</encryption>
+        <secret>{{ item.password }}</secret>
+      </secret>
+    </username>
+    {% endfor %}
+
+    <service>
+      <password-encryption/>
+    </service>
+
+    <aaa>
+      <new-model xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa"/>
+    </aaa>
+
+  </native>
+</config>

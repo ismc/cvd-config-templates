@@ -1,0 +1,112 @@
+---
+# defaults file for cisco-cvd-campus-lan-layer2
+#
+
+cvd_access_switch_procedures:
+  - procedure_1
+  - procedure_2
+  - procedure_3
+  - procedure_4
+  - procedure_5
+
+cvd_distribution_switch_procedures:
+  - procedure_1
+  - procedure_2
+  - procedure_3
+  - procedure_4
+  - procedure_5
+  - procedure_6
+  - procedure_7
+  - procedure_8
+
+
+# configure the device hostname
+cvd_hostname: "{{ inventory_hostname_short }}"
+
+# configure the list of dns name resolvers
+cvd_name_servers: "{{ name_servers | default([]) }}"
+
+# set the local domain name to cisco.local
+cvd_domain_name: "{{ domain_name | default('cisco.local') }}"
+
+# configure default communities for snmp ro and rw
+cvd_snmp_community_ro: "{{ snmp_read_only_name }} | default('public') }}"
+cvd_snmp_community_rw: "{{ snmp_read_write_name }} | default('private') }}"
+
+# set the default enable mode password
+cvd_enable_secret: "{{ enable_secret | default('C1sco123')}}"
+
+# configure local user accounts in ios
+# {
+#   username: <local account name>
+#   password: <unencrypted password>
+#   privilege: [0..15]
+# }
+cvd_local_accounts: []
+
+# enable ip domain name lookups
+cvd_domain_lookup: "{{ domain_looup | default(True) }}"
+
+# configure tacacs servers
+# {
+#   name: <tacacs server name identifier>
+#   address: <hostname or ipv4 address of the server>
+#   key: <configured tacacs key>
+# }
+cvd_tacacs_servers: []
+
+# configure tacacs group
+# {
+#   name: <tacacs server group name>
+#   servers: [<list of server names>]
+# }
+cvd_tacacs_server_groups: []
+
+# configure the name of the management acl
+cvd_management_acl_name: "{{ management_acl_name | default('MANAGEMENT') }}"
+
+# configure management acl entries
+# {
+#   subnet: <ip subnet>
+#   mask: <wildcard mask>
+# }
+cvd_management_acl: []
+
+# configure ntp servers
+cvd_ntp_servers: "{{ ntp_servers | default([]) }}"
+
+# configure time zone data
+cvd_clock_timezone:  "{{ clock_timezone | default('PST') }}"
+cvd_clock_offset: "{{ clock_offset | default(-8) }}"
+cvd_clock_summer_time: "{{ clock_summer_time | default('PDT') }}"
+
+cvd_data_vlan_id: "{{ data_vlan }}"
+cvd_data_vlan_name: "{{ data_vlan_name | default('Data') }}"
+
+cvd_voice_vlan_id: "{{ voice_vlan }}"
+cvd_voice_vlan_name: "{{ voice_vlan_name | default('Voice') }}"
+
+cvd_management_vlan_id: "{{ management_vlan | default(None) }}"
+cvd_management_vlan_name: "{{ management_vlan_name | default('Management') }}"
+
+# should be in the form of A.B.C.D/E
+cvd_management_vlan_address: null
+
+cvd_anti_vlan_hop_id: "{{ anti_vlan_hop | default(None) }}"
+cvd_anti_vlan_hop_name: "{{ anti_vlan_hop_name | default('AntiVlanHop') }}"
+
+cvd_default_gateway: "{{ default_gateway | default(None) }}"
+
+cvd_ra_guard_policy_name: "{{ ra_guard_policy_name | default('HOST_POLICY') }}"
+
+cvd_access_ports: []
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+---
+- name: configure switch interfaces to support clients and ip phones
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_vlan.xml.j2') }}"
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: apply `switchport host` command to all access ports
+  ios_config:
+    lines: switchport host
+    parents: "interface range {{ item['name'] }}{{ item['module'] }}/{{ item['card'] }}/{{ item['ports'] }}"
+    save_when: never
+    running_config: "{{ configuration.stdout }}"
+  with_items: "{{ access_ports }}"
+  when: access_ports
+  connection: network_cli
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: set the interface `load-interval` value
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_load_interval.xml.j2') }}"
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: set the maximum number of mac addresses on the interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_mac_security.xml.j2') }}"
+
+- name: set the interace mac aging time
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_mac_security.xml.j2') }}"
+
+- name: configure the restrict option to drop traffic from mac addresses
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_violation_security.xml.j2') }}"
+
+- name: configure dhcp snooping and arp inspection
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_snooping.xml.j2') }}"
+
+- name: configure ip source guard on the interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_source_guard.xml.j2') }}"
+
+- name: attach the ipv6 first hop security policy to the interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/access_ports_nd_security.xml.j2') }}"
+
+- name: enable the qos macro on the access edge
+  ios_config:
+    lines: "{{ lookup('template', 'templates/access/access_ports_macro.cfg.j2').splitlines() }}"
+    save_when: never
+    running_config: "{{ configuration.stdout }}"
+  connection: network_cli
+  when: "'access' in group_names"
+  vars:
+    desired_macro: AccessEdgeQoS
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: increase the default queue for catalyst 2960-x
+  ios_config:
+    lines: mls qos queue-set operation 1 threshold 3 100 100 100 3200
+  when: "model | string == '2960'"
+  connection: network_cli

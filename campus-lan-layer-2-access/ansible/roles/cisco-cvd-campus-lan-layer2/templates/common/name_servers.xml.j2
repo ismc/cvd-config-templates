@@ -1,0 +1,11 @@
+<config>
+  <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+    <ip>
+    {% for item in cvd_name_servers %}
+      <name-server>
+        <no-vrf>{{ item }}</no-vrf>
+      </name-server>
+    {% endfor %}
+    </ip>
+  </native>
+</config>

@@ -1,0 +1,30 @@
+---
+- name: configure the access switch layer 2 vlans
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/vlans.xml.j2') }}"
+
+- name: configure the management ipv4 interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/management_interface.xml.j2') }}"
+  when: cvd_management_vlan_id
+
+- name: configure the default gateway
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/common/gateway.xml.j2') }}"
+  when: cvd_default_gateway
+
+- name: configure dhcp snooping on the data and voice vlans
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/dhcp_snoop_global.xml.j2') }}"
+
+- name: configure arp inspection on the data and voice vlans
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/arp_inspection.xml.j2') }}"
+
+- name: configure the bridge protocol data unit (bpdu) guard common setting
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/common/stp_bpdu_guard.xml.j2') }}"
+
+- name: configure the ipv6 first hop security common policy for host ports
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/ra_guard.xml.j2') }}"

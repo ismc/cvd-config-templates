@@ -1,0 +1,20 @@
+---
+- name: Configure the platform
+  include_tasks: includes/access/procedure_1.yaml
+  when: "'procedure_1' in cvd_access_switch_procedures"
+
+- name: Configure LAN switch universal settings
+  include_tasks: includes/access/procedure_2.yaml
+  when: "'procedure_2' in cvd_access_switch_procedures"
+
+- name: Configure access switch global settings
+  include_tasks: includes/access/procedure_3.yaml
+  when: "'procedure_3' in cvd_access_switch_procedures"
+
+- name: Configure client connectivity
+  include_tasks: includes/access/procedure_4.yaml
+  when: "'procedure_4' in cvd_access_switch_procedures"
+
+- name: Connect to distribution or WAN router
+  include_tasks: includes/access/procedure_5.yaml
+  when: "'procedure_5' in cvd_access_switch_procedures"

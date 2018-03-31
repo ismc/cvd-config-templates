@@ -1,0 +1,29 @@
+<config>
+  <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+
+    {% if model|string not in ['4500', '6500'] %}
+
+    <ip>
+      <default-gateway>{{ cvd_default_gateway }}</default-gateway>
+    </ip>
+
+    {% else %}
+
+    <ip>
+      <route>
+
+        <ip-route-interface-forwarding-list>
+          <prefix>0.0.0.0</prefix>
+          <mask>0.0.0.0</mask>
+          <fwd-list>
+            <fwd>{{ cvd_default_gateway }}</fwd>
+          </fwd-list>
+        </ip-route-interface-forwarding-list>
+
+      </route>
+    </ip>
+
+    {% endif %}
+
+  </native>
+</config>

@@ -1,0 +1,40 @@
+---
+- name: procedure 5 - configure access ports macro
+  ios_config:
+    lines: "{{ lookup('template', 'templates/access/access_ports_macro.cfg.j2').splitlines() }}"
+    save_when: never
+    running_config: "{{ configuration.stdout }}"
+  when: "'access' in group_names"
+  connection: network_cli
+  vars:
+    desired_macro: EgressQoS
+  register: operation
+
+- name: procedure 5 wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: configure etherchannel interface to distribution
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/etherchannel.xml.j2') }}"
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: configure vlan trunk upstream interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/trunk_upload.xml.j2') }}"
+
+- name: configure vlan hopping risk mitigation
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/anti_vlan_hopping.xml.j2') }}"
+
+- name: set the native vlan
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/access/set_native_vlan.xml.j2') }}"
