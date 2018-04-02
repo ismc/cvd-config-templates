@@ -1,0 +1,51 @@
+---
+- name: configure distribution ports to core
+  block:
+    - name: configure portchannel interfaces
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/distribution_ports_to_core.xml.j2') }}"
+
+    - name: configure multicast optimization
+      ios_config:
+        lines: platform multicast forwarding fast-redirect
+        parents: "interface {{ item.interface }}"
+      with_items: "{{ uplinks }}"
+      connection: network_cli
+  when: uplinks and uplinks[0]['interface'].startswith('Port-channel')
+
+- name: configure eigrp routing features
+  block:
+    - name: configure eigrp summarization on the links to the core
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/eigrp_summary.xml.j2') }}"
+
+    - name: configure eigrp authentication
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/eigrp_authentication.xml.j2') }}"
+  when: routing_protocol == 'eigrp'
+
+- name: configure ospf routing features
+  block:
+    - name: configure ospf summary routes
+      ios_config:
+        lines:
+          - "area {{ network.area }} range {{ network.ipv4_network | ipaddr('network') }} {{ network.ipv4_network | ipaddr('netmask') }}"
+        parents: "router ospf {{ ospf.id }}"
+      with_items: "{{ ospf.summaries }}"
+      connection: network_cli
+      register: operation
+
+    - name: wait an arbitrary period for config sync
+      pause:
+        prompt: "Wait for configuration synchronization."
+        seconds: 60
+      when: operation is changed
+
+    - name: configure ospf authentication
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/ospf_authentication.xml.j2') }}"
+
+    - name: configure ospf ports
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/distribution_ports_ospf.xml.j2) }}"
+  when: routing_protocol == 'ospf'

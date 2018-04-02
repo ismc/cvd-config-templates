@@ -101,6 +101,8 @@ cvd_ra_guard_policy_name: "{{ ra_guard_policy_name | default('HOST_POLICY') }}"
 
 cvd_access_ports: []
 
+cvd_loopback0_address: "{{ loopback0 | default(None) }}"
+
 
 
 

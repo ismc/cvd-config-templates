@@ -1,2 +1,0 @@
----
-- include_tasks: "vss_option_{{ dist_ha_option }}.yml"

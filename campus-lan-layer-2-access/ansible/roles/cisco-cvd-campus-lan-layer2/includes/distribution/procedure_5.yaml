@@ -1,0 +1,14 @@
+---
+- name: enable ip multicast routing globally
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/common/ip_mroute_global.xml.j2') }}"
+
+- name: configure ip multicast rp discovery
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/common/ip_mroute_disc_rp.xml.j2') }}"
+
+- name: configure ip pim sparse mode on distribution switch interfaces
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/ip_pim_sparse_access.xml.j2') }}"
+
+

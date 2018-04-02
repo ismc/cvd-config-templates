@@ -1,0 +1,20 @@
+---
+- name: configure ip dhcp server (if necessary)
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/dhcp_server.xml.j2') }}"
+  when : dhcp_excl_low is defined
+
+- name: configure etherchannel member interfaces
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/l2_portchannel_to_access.xml.j2') }}"
+  register: operation
+
+- name: wait an arbitrary period for config sync
+  pause:
+    prompt: "Wait for configuration synchronization."
+    seconds: 60
+  when: operation is changed
+
+- name: confiugre the vlan trunk interface to the access layer
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/l3_svi.xml.j2') }}"

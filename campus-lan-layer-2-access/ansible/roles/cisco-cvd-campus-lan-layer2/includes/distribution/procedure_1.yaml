@@ -1,0 +1,158 @@
+---
+- name: option 1 - convert cisco catalyst 6807-xl, 6500-e, 6880-x, 4500e, and 4500-x to virtual switching system using easy-vss
+  block:
+    - name: configure temporary device hostname
+      ios_config:
+        lines:
+          - "hostname VSS-Sw{{ vss_stack_num }}"
+          - switch virtual easy
+
+    - name: enable connectivity between switch pairs
+      ios_config:
+        lines: no shutdown
+        parents: "{{ item }}"
+      with_items: "{{ vsl_links }}"
+
+      # FIXME need to put a pause here asking the user to proced with a variable overide
+    - name: convert vsl links and reload device
+      ios_command:
+        commands:
+          - "switch convert mode easy-virtual-switch links {% for interface in vsl_links %}{{ interface }} {% endfor %} domain {{ vsl_domain }}\ryes\r"
+
+    - name: wait for reboot to complete
+      wait_for:
+        port: 22
+
+    - name: validate sso mode
+      ios_command:
+        commands: show switch virtual redundancy
+      register: command
+
+    - name: assert sso mode
+      fail:
+        msg: device is not in sso mode
+      when: "'STANDBY HOT' not in command.stdout"
+
+    - name: configure device hostname
+      ios_config:
+        lines: "hostname {{ cvd_hostname }}"
+
+    - name: configure dual-active mechanism
+      ios_config:
+        lines:
+          - dual-active fast-hello
+          - no shutdown
+        parents: "{{ item }}"
+      with_items: "{{ vsl_backup_links }}"
+
+    - name: set virtual mac address for vss system
+      ios_config:
+        lines: mac-address use-virtual
+        parents: "switch virtual domain {{ vss_domain }}"
+
+    - name: step 11 - set virtual mac address for vss system
+      ios_config:
+        lines:
+          - standby port delay 300
+          - standby port bringup 1 2
+        parents: "switch virtual domain {{ vss_domain }}"
+      when: vsl_stack_num > 1
+
+      # FIXME need to put a pause here asking the user to proced with a variable overide
+    - name: save the configuration to non-volatile memory and reboot
+      ios_command:
+        commands: "reload\r"
+      failed_when: false
+
+    - name: wait for reboot to complete
+      wait_for:
+        port: 22
+  when: dist_ha_option == 1
+  connection: network_cli
+
+
+
+- name: option 2 - configure cisco catalyst 6807-xl, 6500-e, or 6880-x virtual switching system
+  block:
+    - name: configure load balancing algorith
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/common/load_balance_algorithm.xml.j2') }}"
+
+    - name: configure base qos policy for platform
+      ios_config:
+        src: templates/distribution/6kqos_base.cli.j2
+        save: never
+
+      # if you are using gigabit ethernet cards supported in vss mode on cisco
+      # catalyst 6500-xland 6807-e supervisor engine 2t based switches,
+      # configure an additional qos policy for the gigabit ethernet ports.
+      #
+      # setting when to false effectively disables the task from running
+    - name: step 3 - enable connectivity between switch pairs
+      ios_config:
+        src: "templates/distribution/Sup2Tqos.cli.j2"
+      when: false
+  when: dist_ha_option == 2
+
+
+
+
+
+- name: option 3 - configure cisco catalyst 4500e vss and 4500-x vss platforms
+  block:
+    - name: configure load balancing algorith
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/common/load_balance_algorithm.xml.j2') }}"
+
+    - name: configure base qos policy for platform
+      ios_config:
+        src: templates/distribution/4kqos_base.cli.j2
+        save: never
+  when: dist_ha_option == 3
+
+
+
+
+
+- name: option 4 - configure the cisco catalyst 3850 platform
+  block:
+    - name: set the stack switch priority
+      ios_command:
+        commands: "switch {{ item.switch_id }} priority {{ item.priority }}"
+      with_items: "{{ stack_config }}"
+      when: stack_config is defined and model | string in ['3850', '3650', '2960']
+      connection: network_cli
+
+    - name: configure load balancing algorith
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/common/load_balance_algorithm.xml.j2') }}"
+
+    - name: configure base qos policy for platform
+      ios_config:
+        src: templates/distribution/3kqos_base.cli.j2
+      connection: network_cli
+
+    - name: enable switch stack software automatic upgrades
+      ios_config:
+        running_config: "{{ configuration.stdout }}"
+        lines: software auto-upgrade enable
+      when: "model | string in ['3850', '3650']"
+      connection: network_cli
+
+    - name: configure switch stack power
+      block:
+        - name: set stack power mode to redundant
+          ios_config:
+            lines: mode redundant
+            parents: stack-power stack PowerStack-1
+
+        - name: add switches to stack
+          ios_config:
+            lines: stack PowerStack-1
+            parents: "stack-power switch {{ item.switch_id }}"
+          with_items: "{{ stack_config }}"
+      when: "stack_config is defined and model | string == '3850'"
+      connection: network_cli
+  when: dist_ha_option == 4
+
+

@@ -1,54 +1,28 @@
+---
 - name: enable spanning-tree bpdu guard
   netconf_config:
-    src: "{{ lookup('template', 'stp/bpdu_guard.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/stp_bpdu_guard.xml.j2') }}"
 
-- name: configure
-
-
-
-
-
-- name: BUILD LOOPBACK_IP XML DATA
-  template:
-    src: loopback_ip.j2
-    dest: "{{ configs_dir }}/{{ inventory_hostname }}/loopback_ip.xml"
-
-- name: PUSH NETCONF TO REMOTES
+- name: configure loopback 0 address
   netconf_config:
-    host: "{{ ansible_host }}"
-    username: "{{ ansible_user }}"
-    password: "{{ ansible_ssh_pass }}"
-    src: "{{ configs_dir }}/{{ inventory_hostname }}/loopback_ip.xml"
+    xml: "{{ lookup('template', 'templates/distribution/loopback_ip.xml.j2') }}"
+  when: cvd_loopback0_address is defined
 
+- name: configure out-of-band management interface (if necessary)
+  block:
+    - name: configure out-of-band interface address
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/oob_ip.xml.j2') }}"
 
+    - name: exclude out-of-band management interface from vss shutdown
+      ios_config:
+        lines: "dual-active exclude interface {{ oob_interface['interface']  }}"
+        parents: "switch virtual domain {{ vss_domain }}"
+      when: model | string in ['6500']
+      connection: network_cli
+  when: oob_interface
 
-
-- name: BUILD OOB_IP XML DATA
-  template:
-    src: oob_ip.j2
-    dest: "{{ configs_dir }}/{{ inventory_hostname }}/oob_ip.xml"
-
-- name: PUSH NETCONF TO REMOTES
+- name: configure system process to use loopback interface address
   netconf_config:
-    host: "{{ ansible_host }}"
-    username: "{{ ansible_user }}"
-    password: "{{ ansible_ssh_pass }}"
-    src: "{{ configs_dir }}/{{ inventory_hostname }}/oob_ip.xml"
+    xml: "{{ lookup('template', 'templates/distribution/sys_process_source_iface.xml.j2') }}"
 
-
-
-
-- name: BUILD VSS EXCLUDE SUMMARIZATION CONFIG DATA
-  template:
-    src: vss_exclude.j2
-    dest: "{{ configs_dir }}/{{ inventory_hostname }}/vss_exclude.cfg"
-
-- name: PUSH CONFIG TO REMOTES
-  ios_config:
-    provider: "{{ provider }}"
-    src: "{{ configs_dir }}/{{ inventory_hostname }}/vss_exclude.cfg"
-
-- name: WAIT AN ARBITRARY PERIOD FOR CONFIG SYNC
-  pause:
-    prompt: "Wait for configuration synchronization."
-    seconds: 60

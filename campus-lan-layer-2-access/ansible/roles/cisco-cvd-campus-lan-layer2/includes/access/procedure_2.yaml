@@ -26,11 +26,11 @@
 
 - name: configure device management protocols
   netconf_config:
-    xml: "{{ lookup('template', 'templates/management/protocols.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/protocols.xml.j2') }}"
 
 - name: enable snmp ro and rw community strings
   netconf_config:
-    xml: "{{ lookup('template', 'templates/management/snmp.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/snmp.xml.j2') }}"
 
   # setting when to false effectively disables the task from running
   # TODO fix template variables
@@ -41,11 +41,11 @@
 
 - name: configure local accounts
   netconf_config:
-    xml: "{{ lookup('template', 'templates/management/local_login.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/local_login.xml.j2') }}"
 
 - name: configure tacacs+ servers
   netconf_config:
-    xml: "{{ lookup('template', 'templates/management/tacacs.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/tacacs.xml.j2') }}"
 
 - name: configure ntp servers
   netconf_config:

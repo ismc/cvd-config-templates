@@ -1,0 +1,24 @@
+---
+- name: configure vlans for distribution switches
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/dist_l2vlans.xml.j2') }}"
+
+- name: globally enable ipv4 and multicast routing
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/ip_routing.xml.j2') }}"
+
+- name: configure eigrp routing for distribution switch
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/eigrp.xml.j2') }}"
+  when: routing_protocol == 'eigrp'
+
+- name: configure ospf routing for distribution switch
+  block:
+    - name: configure the ospf routing process
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/ospf.xml.j2') }}"
+
+    - name: configure ios route install and purge behavior
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/purge_route.xml.j2') }}"
+  when: routing_protocol == 'ospf'

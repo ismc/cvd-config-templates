@@ -1,0 +1,32 @@
+---
+- name: Configure the platform
+  include_tasks: includes/distribution/procedure_1.yaml
+  when: "'procedure_1' in cvd_distribution_switch_procedures"
+
+- name: Configure LAN switch universal settings
+  include_tasks: includes/distribution/procedure_2.yaml
+  when: "'procedure_2' in cvd_distribution_switch_procedures"
+
+- name: Configure distribution switch global settings
+  include_tasks: includes/distribution/procedure_3.yaml
+  when: "'procedure_3' in cvd_distribution_switch_procedures"
+
+- name: Configure IPv4 unicast routing
+  include_tasks: includes/distribution/procedure_4.yaml
+  when: "'procedure_4' in cvd_distribution_switch_procedures"
+
+- name: Configure IPv4 Multicast routing
+  include_tasks: includes/distribution/procedure_5.yaml
+  when: "'procedure_5' in cvd_distribution_switch_procedures"
+
+- name: Configure IPv4 Multicast Dynamic RP
+  include_tasks: includes/distribution/procedure_6.yaml
+  when: "'procedure_6' in cvd_distribution_switch_procedures"
+
+- name: Connect to access layer
+  include_tasks: includes/distribution/procedure_7.yaml
+  when: "'procedure_7' in cvd_distribution_switch_procedures"
+
+- name: Connect to LAN core or WAN router
+  include_tasks: includes/distribution/procedure_8.yaml
+  when: "'procedure_8' in cvd_distribution_switch_procedures"

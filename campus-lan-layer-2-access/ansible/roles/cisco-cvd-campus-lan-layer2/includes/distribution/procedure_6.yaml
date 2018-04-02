@@ -1,0 +1,23 @@
+---
+- name: configure rendezvous point loopback interface
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/rendezvous_loopback.xml.j2') }}"
+
+- name: configure autorp candidate rp
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/rendezvous_candidate.xml.j2') }}"
+
+- name: configure autorp mapping agent
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/rendezvous_map.xml.j2') }}"
+
+- name: apply autorp mapping agent to interfaces
+  ios_config:
+    lines:
+      - ip pim send-rp-discovery Loopback0 scope 32
+      - ip pim rp-announce-filter rp-list RP-NETS
+  connection: network_cli
+
+- name: filter rogue multicast sources
+  netconf_config:
+    xml: "{{ lookup('template', 'templates/distribution/rendezvous_rogue.xml.j2') }}"

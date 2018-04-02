@@ -1,16 +1,15 @@
 ---
 - name: configure the device hostname
   netconf_config:
-    src: "{{ lookup('template', 'common/hostname.xml.j2') }}"
-  when: hostname | default(ansible_access_switch_hostname)
+    xml: "{{ lookup('template', 'templates/common/hostname.xml.j2') }}"
 
 - name: set vtp mode to transparent
   netconf_config:
-    src: "{{ lookup('template', 'common/vtp.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/vtp_transparent_mode.xml.j2') }}"
 
 - name: enable rapid per-vlan spanning-tree (pvst+)
   netconf_config:
-    src: "{{ lookup('template', 'common/stp.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/stp_rapid_pvst.xml.j2') }}"
 
 - name: set spanning-tree root for all vlans
   ios_config:
@@ -19,41 +18,40 @@
 
 - name: enable unidirectional link detection (udld)
   netconf_config:
-    src: "{{ lookup('template', 'common/udld.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/udld_enable.xml.j2') }}"
 
 - name: enable automatic recovery from port error disabled state
   netconf_config:
-    src: "{{ lookup('template', 'common/errdisable.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/errdisable.xml.j2') }}"
 
 - name: configure dns name servers
   netconf_config:
-    src: "{{ lookup('template', 'common/dns.xml.j2') }}"
-  when: name_servers | default(access_switch_name_servers)
+    xml: "{{ lookup('template', 'templates/common/name_servers.xml.j2') }}"
+  when: cvd_name_servers
 
 - name: configure device management protocols
   netconf_config:
-    src: "{{ lookup('template', 'common/mgmt_protocols.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/protocols.xml.j2') }}"
 
 - name: enable snmp ro and rw community strings
   netconf_config:
-    src: "{{ lookup('template', 'common/snmp.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/snmp.xml.j2') }}"
 
   # setting when to false effectively disables the task from running
   # TODO fix template variables
 - name: configure acl to secure management traffic
   netconf_config:
-    src: "{{ lookup('template', 'common/mgmt_acl.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/acl.xml.j2') }}"
   when: false
 
 - name: configure local accounts
   netconf_config:
-    src: "{{ lookup('template', 'common/local_login.xml.j2') }}"
-  when: local_accounts | default(access_switch_local_accounts)
+    xml: "{{ lookup('template', 'templates/common/local_login.xml.j2') }}"
 
 - name: configure tacacs+ servers
   netconf_config:
-    src: "{{ lookup('template', 'common/tacacs.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/tacacs.xml.j2') }}"
 
 - name: configure ntp servers
   netconf_config:
-    src: "{{ lookup('template', 'common/ntp.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/ntp.xml.j2') }}"
