@@ -63,8 +63,8 @@ cvd_name_servers: "{{ name_servers | default([]) }}"
 cvd_domain_name: "{{ domain_name | default(None) }}"
 
 # templates/common/snmp.xml.j2
-cvd_snmp_community_ro: "{{ snmp_read_only_name }} }}"
-cvd_snmp_community_rw: "{{ snmp_read_write_name }} }}"
+cvd_snmp_community_ro: "{{ snmp_read_only_name }}"
+cvd_snmp_community_rw: "{{ snmp_read_write_name }}"
 
 # templates/common/management_acl.xml.j2
 cvd_management_acl_name: "{{ management_acl_name | default(None) }}"
