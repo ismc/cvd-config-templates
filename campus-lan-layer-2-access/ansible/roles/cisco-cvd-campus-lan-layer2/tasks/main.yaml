@@ -6,7 +6,7 @@
     cvd_targets:
       - configure
       - hostvars
-      - dump_xml
+      - dump
 
 - name: validate the value for target
   fail:
