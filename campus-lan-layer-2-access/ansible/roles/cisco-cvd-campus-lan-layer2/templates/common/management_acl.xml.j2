@@ -5,33 +5,40 @@
     <ip>
       <access-list>
         <standard xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
-          <name>MANAGEMENT</name>
-          {% for management_subnet in management_acl_subnets %}
+          <name>{{ cvd_management_acl_name }}</name>
+
+          {% for item in cvd_management_networks %}
           <access-list-seq-rule>
             <sequence>{{ loop.index * 10 }}</sequence>
             <permit>
               <std-ace>
-                <ipv4-prefix>{{ management_subnet | ipaddr("network") }}</ipv4-prefix>
-                <mask>{{ management_subnet | ipaddr("wildcard") }}</mask>
+                <ipv4-prefix>{{ item | ipaddr("network") }}</ipv4-prefix>
+                <mask>{{ item | ipaddr("wildcard") }}</mask>
               </std-ace>
             </permit>
           </access-list-seq-rule>
           {% endfor %}
+
         </standard>
       </access-list>
     </ip>
 
     <snmp-server>
+      {% if cvd_snmp_community_ro %}
       <community xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-snmp">
-        <name>{{ snmp_read_only_name }}</name>
+        <name>{{ cvd_snmp_community_ro }}</name>
         <RO/>
-        <access-list-name>MANAGEMENT</access-list-name>
+        <access-list-name>{{ cvd_management_acl_name }}</access-list-name>
       </community>
+      {% endif %}
+
+      {% if cvd_snmp_community_rw %}
       <community xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-snmp">
-        <name>{{ snmp_read_write_name }}</name>
+        <name>{{ cvd_snmp_community_rw }}</name>
         <RW/>
-        <access-list-name>MANAGEMENT</access-list-name>
+        <access-list-name>{{ cvd_management_acl_name }}</access-list-name>
       </community>
+      {% endif %}
     </snmp-server>
 
     <line>
@@ -39,11 +46,13 @@
         <first>0</first>
         <last>4</last>
         <access-class>
+
           <acccess-list>
             <direction>in</direction>
-            <access-list>MANAGEMENT</access-list>
+            <access-list>{{ cvd_management_acl_name }}</access-list>
             <vrf-also/>
           </acccess-list>
+
         </access-class>
       </vty>
 
@@ -51,13 +60,15 @@
         <first>5</first>
         <last>15</last>
         <access-class>
+
           <acccess-list>
             <direction>in</direction>
-            <access-list>MANAGEMENT</access-list>
-          {% if model | string in ["3650", "3850"] %}
+            <access-list>{{ cvd_management_acl_name }}</access-list>
+            {% if model | string in ["3650", "3850"] %}
             <vrf-also/>
-          {% endif %}
+            {% endif %}
           </acccess-list>
+
         </access-class>
       </vty>
     </line>

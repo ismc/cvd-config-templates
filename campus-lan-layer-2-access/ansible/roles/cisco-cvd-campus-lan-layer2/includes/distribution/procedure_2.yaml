@@ -41,7 +41,7 @@
   # TODO fix template variables
 - name: configure acl to secure management traffic
   netconf_config:
-    xml: "{{ lookup('template', 'templates/common/acl.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/management_acl.xml.j2') }}"
   when: false
 
 - name: configure local accounts

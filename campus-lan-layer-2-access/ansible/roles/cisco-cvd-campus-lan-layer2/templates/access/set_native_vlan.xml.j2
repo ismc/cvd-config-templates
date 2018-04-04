@@ -1,28 +1,31 @@
 #jinja2: lstrip_blocks: "true"
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+
   {% set portchannel_ids = [] %}
-  {% for interface in uplinks %}
-    {% if interface["interface"].startswith("Port-channel") %}
-      {% set _ = portchannel_ids.append(interface["interface"].lstrip("Port-channel")) %}
+  {% for item in uplinks %}
+    {% if item.interface.startswith("Port-channel") %}
+      {% set _ = portchannel_ids.append(interface.interface | interface_split('name')) %}
     {% endif %}
   {% endfor %}
-  {% for id in portchannel_ids %}
+
+  {% for item in portchannel_ids %}
     <interface>
       <Port-channel>
-        <name>{{ id }}</name>
+        <name>{{ item }}</name>
           <switchport>
             <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
               <native>
-                <vlan>{{ anti_vlan_hop }}</vlan>
+                <vlan>{{ cvd_anti_vlan_hop }}</vlan>
               </native>
             </trunk>
           </switchport>
-        <description>{{ "Port-channel" ~ id }}</description>
+        <description>{{ "Port-channel" ~ item }}</description>
       </Port-channel>
     </interface>
+
     {% for interface in port_channels[id | int]["interfaces"] %}
-      {% set interface_type = interface.split("Ethernet") %}
+    {% set interface_type = interface.split("Ethernet") %}
     <interface>
       <{{ interface_type[0] ~ "Ethernet" }}>
         <name>{{ interface_type[1] }}</name>
@@ -37,6 +40,7 @@
       </{{ interface_type[0] ~ "Ethernet" }}>
     </interface>
     {% endfor %}
-  {% endfor %}
+    {% endfor %}
+
   </native>
 </config>

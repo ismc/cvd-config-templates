@@ -1,0 +1,10 @@
+---
+- name: create destination path (if necssary)
+  file:
+    path: "{{ output }}"
+    state: directory
+
+- name: dump xml template to disk
+  template:
+    src: "{{ template }}"
+    dest: "{{ output }}/{{ template.replace('.j2', '') | basename }}"

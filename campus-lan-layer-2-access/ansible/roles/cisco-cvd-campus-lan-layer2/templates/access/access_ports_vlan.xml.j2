@@ -1,42 +1,38 @@
 #jinja2: lstrip_blocks: "True"
 #jinja2: trip_block: "True"
 
+{% set interface_range = cvd_access_ports | interface_range %}
+
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-{% for intf in access_ports %}
-  {% set low_port = (intf["ports"] | string).split("-")[0] | int %}
-  {% set high_port = (intf["ports"] | string).split("-")[1] | default(low_port) | int %}
-  {% for port in range(low_port, high_port + 1) %}
-    {% if intf["module"] is defined %}
-      {% set interface = intf["module"] ~ "/" ~ intf["card"] ~ "/" ~ port %}
-    {% elif intf["card"] is defined %}
-      {% set interface = intf["card"] ~ "/" ~ port %}
-    {% else %}
-      {% set interface = port %}
-    {% endif %}
-      <{{ intf["name"] }}>
-        <name>{{ interface }}</name>
+
+      {% for item in interface_range %}
+      <{{ item | interface_split('name') }}>
+        <name>{{ item | interface_split('index') }}</name>
+
         <switchport>
           <access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <vlan>
               <vlan>{{ data_vlan_id | default(cvd_data_vlan_id) }}</vlan>
             </vlan>
           </access>
+
           <voice xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <vlan>
               <vlan>{{ voice_vlan_id | default(cvd_voice_vlan_id) }}</vlan>
             </vlan>
           </voice>
-          {# This should be done under the access_ports_host role,
-             but it's here due to a rpc bug! #}
+
+          {# This should be done under the access_ports_host role, but it's here due to a rpc bug! #}
           <mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <access/>
           </mode>
+
         </switchport>
-      </{{ intf["name"] }}>
-  {% endfor %}
-{% endfor %}
+      </{{ item | interface_split('name') }}>
+      {% endfor %}
+
     </interface>
   </native>
 </config>

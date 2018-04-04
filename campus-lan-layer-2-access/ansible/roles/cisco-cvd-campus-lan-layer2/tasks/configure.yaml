@@ -1,0 +1,21 @@
+---
+- name: check for required fact device_role
+  fail:
+    msg: "missing or invalid fact: device_role"
+  when: device_role is not defined or device_role not in ['access', 'distribution']
+
+- name: get the current running-config from the device
+  ios_command:
+    commands: show running-config
+  connection: network_cli
+  register: configuration
+
+- name: include device role specific tasks
+  include_tasks: "includes/{{ device_role }}/main.yaml"
+
+- name: save the current running-config to startup-config
+  ios_config:
+    save_when: modified
+    diff_against: intended
+    intended_config: "{{ configuration.stdout }}"
+  connection: network_cli

@@ -2,17 +2,19 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
 
+    {% if cvd_enable_secret %}
     <enable>
       <secret>
         <type>0</type>
         <secret>{{ cvd_enable_secret }}</secret>
       </secret>
     </enable>
+    {% endif %}
 
     {% for item in cvd_local_accounts %}
     <username>
       <name>{{ item.username }}</name>
-      <privilege>{{ item.privilege }}</privilege>
+      <privilege>{{ item.privilege_level }}</privilege>
       <secret>
         <encryption>0</encryption>
         <secret>{{ item.password }}</secret>

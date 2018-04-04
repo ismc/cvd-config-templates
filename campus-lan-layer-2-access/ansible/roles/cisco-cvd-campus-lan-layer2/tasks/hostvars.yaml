@@ -1,0 +1,4 @@
+---
+- name: print settings to stdout
+  debug:
+    var: hostvars[inventory_hostname_short]

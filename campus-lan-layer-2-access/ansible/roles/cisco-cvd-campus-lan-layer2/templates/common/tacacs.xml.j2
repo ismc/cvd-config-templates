@@ -21,20 +21,20 @@
     <aaa>
       <new-model xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa"/>
 
-      {% for item in cvd_tacacs_server_groups %}
+      {% if cvd_tacacs_server_group_name %}
       <group xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa">
         <server>
           <tacacsplus>
-            <name>{{ item.name }}</name>
-            {% for server in item.servers %}
+            <name>{{ cvd_tacacs_server_group_name }}</name>
+            {% for item in cvd_tacacs_servers %}
             <server>
-              <name>{{ server }}</name>
+              <name>{{ item.name }}</name>
             </server>
             {% endfor %}
           </tacacsplus>
         </server>
       </group>
-      {% endfor %}
+      {% endif %}
 
       <authentication xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa">
         <login>

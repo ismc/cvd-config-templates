@@ -2,6 +2,7 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <ip>
+
       <access-list>
         <extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
           <name>MCAST-SOURCES</name>
@@ -20,6 +21,7 @@
             </ace-rule>
           </access-list-seq-rule>
         {% endfor %}
+
           <access-list-seq-rule>
             <sequence>{{ seq[-1] + 10}}</sequence>
             <ace-rule>
@@ -31,11 +33,13 @@
           </access-list-seq-rule>
         </extended>
       </access-list>
+
       <pim>
         <accept-register xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-multicast">
           <list>MCAST-SOURCES</list>
         </accept-register>
       </pim>
+
     </ip>
   </native>
 </config>

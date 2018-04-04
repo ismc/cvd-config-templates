@@ -2,7 +2,7 @@
 - name: configure ip dhcp server (if necessary)
   netconf_config:
     xml: "{{ lookup('template', 'templates/distribution/dhcp_server.xml.j2') }}"
-  when : dhcp_excl_low is defined
+  when: cvd_dhcp_server_network
 
 - name: configure etherchannel member interfaces
   netconf_config:

@@ -1,13 +1,17 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
 
+    {% if ntp_servers %}
     <ntp>
       <server xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ntp">
         <server-list>
-          <ip-address>{{ cvd_ntp_servers }}</ip-address>
+          {% for item in cvd_ntp_servers %}
+          <ip-address>{{ item }}</ip-address>
+          {% endif %}
         </server-list>
       </server>
     </ntp>
+    {% endif %}
 
     <clock>
       <timezone>

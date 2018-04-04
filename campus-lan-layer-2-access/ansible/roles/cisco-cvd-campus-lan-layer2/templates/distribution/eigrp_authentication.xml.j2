@@ -1,42 +1,46 @@
 #jinja2: lstrip_blocks: "true"
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+
+    {% for item in cvd_eigrp_authentication_keys %}
     <key>
       <chain xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-crypto">
-        <name>{{ eigrp["name"] }}</name>
-      {% for key in eigrp_auth["keys"] %}
+        <name>{{ cvd_eigrp_name }}</name>
         <key>
-          <id>{{ key["id"] }}</id>
+          <id>{{ item.id }}</id>
           <key-string>
             <encryption>0</encryption>
-            <key>{{ key["secret"] }}</key>
+            <key>{{ item.secret }}</key>
           </key-string>
         </key>
-      {% endfor %}
       </chain>
     </key>
+    {% endfor %}
+
     <router>
       <eigrp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-eigrp">
-        <id>{{ eigrp["name"] }}</id>
+        <id>{{ cvd_eigrp_name }}</id>
         <address-family>
           <type>ipv4</type>
           <af-ip-list>
             <unicast-multicast>unicast</unicast-multicast>
-            <autonomous-system>{{ eigrp["as"] }}</autonomous-system>
-          {% for interface in uplinks %}
+            <autonomous-system>{{ cvd_eigrp_as }}</autonomous-system>
+            {% for interface in uplinks %}
             <af-interface>
               <name>{{ interface["interface"] }}</name>
               <authentication>
                 <mode>
                   <md5/>
                 </mode>
+                # FIXME 
                 <key-chain>{{ eigrp_auth["name"] }}</key-chain>
               </authentication>
             </af-interface>
-          {% endfor %}
+            {% endfor %}
           </af-ip-list>
         </address-family>
       </eigrp>
     </router>
+
   </native>
 </config>

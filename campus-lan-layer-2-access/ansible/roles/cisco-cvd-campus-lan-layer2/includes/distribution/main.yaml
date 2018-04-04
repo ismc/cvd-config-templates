@@ -21,7 +21,7 @@
 
 - name: Configure IPv4 Multicast Dynamic RP
   include_tasks: includes/distribution/procedure_6.yaml
-  when: "'procedure_6' in cvd_distribution_switch_procedures"
+  when: "'procedure_6' in cvd_distribution_switch_procedures and cvd_enable_multicast_rp"
 
 - name: Connect to access layer
   include_tasks: includes/distribution/procedure_7.yaml

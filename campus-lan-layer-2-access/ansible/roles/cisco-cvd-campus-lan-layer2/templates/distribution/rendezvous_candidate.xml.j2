@@ -1,6 +1,7 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <ip>
+
       <access-list>
         <standard xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
           <name>10</name>
@@ -8,13 +9,14 @@
             <sequence>10</sequence>
             <permit>
               <std-ace>
-                <ipv4-prefix>{{ multicast_network | ipaddr("network")}}</ipv4-prefix>
-                <mask>{{ multicast_network | ipaddr("wildcard")}}</mask>
+                <ipv4-prefix>{{ cvd_multicast_network | ipaddr("network")}}</ipv4-prefix>
+                <mask>{{ cvd_multicast_network | ipaddr("wildcard")}}</mask>
               </std-ace>
             </permit>
           </access-list-seq-rule>
         </standard>
       </access-list>
+
       <pim>
         <send-rp-announce xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-multicast">
           <interface_list>
@@ -28,6 +30,7 @@
           </interface_list>
         </send-rp-announce>
       </pim>
+
     </ip>
   </native>
 </config>

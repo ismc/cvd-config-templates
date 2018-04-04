@@ -13,7 +13,7 @@
 - name: apply `switchport host` command to all access ports
   ios_config:
     lines: switchport host
-    parents: "interface range {{ item['name'] }}{{ item['module'] }}/{{ item['card'] }}/{{ item['ports'] }}"
+    parents: "interface range {{ item }}"
     save_when: never
     running_config: "{{ configuration.stdout }}"
   with_items: "{{ access_ports }}"

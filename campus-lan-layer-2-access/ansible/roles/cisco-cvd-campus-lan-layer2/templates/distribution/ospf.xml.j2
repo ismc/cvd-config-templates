@@ -4,26 +4,29 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <router>
       <ospf xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ospf">
-        <id>{{ ospf["id"] }}</id>
-      {% for network in ospf["networks"] %}
-        {% if network["area"] != 0 %}
+        <id>{{ cvd_ospf_pid }}</id>
+
+        {% for item in cvd_ospf_networks %}
+        {% if item.network.area != 0 %}
         <area>
-          <id>{{ network["area"] }}</id>
+          <id>{{ item.network.area }}</id>
           <stub>
             <no-summary/>
           </stub>
         </area>
         {% endif %}
+
         <network>
-          <ip>{{ network["ipv4_network"] | ipaddr("network") }}</ip>
-          <mask>{{ network["ipv4_network"] | ipaddr("wildcard") }}</mask>
-          <area>{{ network["area"] }}</area>
+          <ip>{{ item.ipv4_network | ipaddr("network") }}</ip>
+          <mask>{{ item.ipv4_network | ipaddr("wildcard") }}</mask>
+          <area>{{ item.area }}</area>
         </network>
-      {% endfor %}
+        {% endfor %}
+
         <passive-interface>
           <default/>
         </passive-interface>
-        <router-id>{{ loopback0 }}</router-id>
+        <router-id>{{ cvd_ospf_router_id }}</router-id>
         <nsf/>
       </ospf>
     </router>

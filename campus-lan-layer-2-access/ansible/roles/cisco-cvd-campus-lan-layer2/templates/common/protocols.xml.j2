@@ -6,10 +6,12 @@
         <secure-server>true</secure-server>
       </http>
 
+      {% if cvd_domain_name %}
       <domain>
         <name>{{ cvd_domain_name }}</name>
         <lookup>true</lookup>
       </domain>
+      {% endif %}
 
       <ssh>
         <version>2</version>
