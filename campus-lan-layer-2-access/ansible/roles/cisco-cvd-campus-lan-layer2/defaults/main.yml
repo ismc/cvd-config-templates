@@ -68,7 +68,7 @@ cvd_snmp_community_rw: "{{ snmp_read_write_name }}"
 
 # templates/common/management_acl.xml.j2
 cvd_management_acl_name: "{{ management_acl_name | default(None) }}"
-cvd_managmeent_acl_networks: "{{ management_acl_networks | default([]) }}"
+cvd_management_permitted_networks: "{{ management_permittted_networks | default([]) }}"
 
 # templates/common/local_login.xml.j2
 cvd_enable_secret: "{{ enable_secret }}"
@@ -99,6 +99,8 @@ cvd_ntp_servers: "{{ ntp_servers | default([]) }}"
 cvd_clock_timezone:  "{{ clock_timezone }}"
 cvd_clock_offset: "{{ clock_offset | string }}"
 cvd_clock_summer_time: "{{ clock_summer_time }}"
+
+cvd_access_ports: "{{ access_ports | default([]) }}"
 
 # templates/access/vlans.xml.j2
 # templates/access/access_ports_vlan.xml.j2
@@ -180,7 +182,7 @@ cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
 cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
 
 # templates/distribution/rendezvous_candidate.xml.j2
-cvd_mulitcast_network: "{{ multicast_network | default(None) }}"
+cvd_multicast_network: "{{ multicast_network | default(None) }}"
 
 
 # templates/distribution/oob_ip.xml.j2

@@ -16,8 +16,8 @@
     parents: "interface range {{ item }}"
     save_when: never
     running_config: "{{ configuration.stdout }}"
-  with_items: "{{ access_ports }}"
-  when: access_ports
+  with_items: "{{ cvd_access_ports }}"
+  when: cvd_access_ports
   connection: network_cli
   register: operation
 
@@ -64,13 +64,11 @@
 
 - name: enable the qos macro on the access edge
   ios_config:
-    lines: "{{ lookup('template', 'templates/access/access_ports_macro.cfg.j2').splitlines() }}"
-    save_when: never
+    lines: macro apply AccessEdgeQoS
+    parents: "interface range {{ item }}"
     running_config: "{{ configuration.stdout }}"
   connection: network_cli
-  when: "'access' in group_names"
-  vars:
-    desired_macro: AccessEdgeQoS
+  with_items: "{{ cvd_access_ports }}"
   register: operation
 
 - name: wait an arbitrary period for config sync

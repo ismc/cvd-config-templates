@@ -7,7 +7,7 @@
         <standard xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
           <name>{{ cvd_management_acl_name }}</name>
 
-          {% for item in cvd_management_networks %}
+          {% for item in cvd_management_permitted_networks %}
           <access-list-seq-rule>
             <sequence>{{ loop.index * 10 }}</sequence>
             <permit>

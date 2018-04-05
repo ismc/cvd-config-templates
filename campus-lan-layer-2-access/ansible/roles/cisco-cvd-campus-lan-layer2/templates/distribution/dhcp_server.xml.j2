@@ -20,7 +20,7 @@
 
           {% if cvd_dhcp_server_default_router %}
           <default-router>{{ cvd_dhcp_server_default_router }}</default-router>
-          {% end %}
+          {% endif %}
 
           {% for item in cvd_dhcp_server_name_servers %}
           <dns-server>{{ item }}</dns-server>

@@ -15,7 +15,7 @@
             {% for interface in uplinks %}
             <af-interface>
               <name>{{ interface["interface"] }}</name>
-              {% for network in eigrp["summaries"] %}
+              {% for network in cvd_eigrp_summaries %}
               <summary-address>
                 <address>{{ network | ipaddr("network") }}</address>
                 <mask>{{ network | ipaddr("netmask") }}</mask>

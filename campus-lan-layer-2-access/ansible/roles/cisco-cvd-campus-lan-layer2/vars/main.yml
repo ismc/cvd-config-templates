@@ -51,7 +51,7 @@ snmp_read_write_name: private
 # the form of A.B.C.D/E.
 #
 # management_acl_name: MANAGEMENT
-# management_acl_networks:
+# management_permitted_networks:
 #   - 10.4.95.0/24
 
 # Configure TACACS+ to perform authentication of user accounts against one or
@@ -105,7 +105,6 @@ etherchannel_protocol: lacp
 
 
 
-
 # Configure EIGRP routing protocol.  The following entries can be used to set
 # various values when routing_protocol == 'eigrp'.
 #
@@ -140,7 +139,7 @@ cvd_ospf_router_id: "{{ ospf_router_id | default(None) }}"
 cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
 cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
 
-
+access_ports: []
 
 
 

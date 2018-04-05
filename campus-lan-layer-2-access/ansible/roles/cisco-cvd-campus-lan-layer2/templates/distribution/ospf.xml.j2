@@ -4,7 +4,7 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <router>
       <ospf xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ospf">
-        <id>{{ cvd_ospf_pid }}</id>
+        <id>{{ cvd_ospf_process_id }}</id>
 
         {% for item in cvd_ospf_networks %}
         {% if item.network.area != 0 %}

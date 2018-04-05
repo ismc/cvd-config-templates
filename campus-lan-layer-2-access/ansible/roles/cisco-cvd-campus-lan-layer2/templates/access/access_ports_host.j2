@@ -1,12 +1,15 @@
 #jinja2: lstrip_blocks: "true"
 
-{% set interface_range = cvd_access_ports | interface_range %}
+{% set interfaces = [] %}
+{% for item in cvd_access_ports %}
+  {% set _ = interfaces.append(item | interface_range) %}
+{% endfor %}
 
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
 
-      {% for item in interface_range %}
+      {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
         <switchport>
@@ -18,4 +21,4 @@
 
     </interface>
   </native>
-</config>
+</config>e

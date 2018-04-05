@@ -16,7 +16,7 @@
               <passive-interface/>
             </af-interface>
             
-            {% for item in eigrp.networks %}
+            {% for item in cvd_eigrp_networks %}
             <network>
               <number>{{ item | ipaddr('network') }}</number>
               <wild-card>{{ item | ipaddr('wildcard') }}</wild-card>
