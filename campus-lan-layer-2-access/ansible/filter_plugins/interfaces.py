@@ -7,6 +7,7 @@ __metaclass__ = type
 
 import re
 
+from ansible.module_utils.six import string_types
 from ansible.errors import AnsibleFilterError
 
 
@@ -22,6 +23,9 @@ def interface_split(interface, key=None):
 
 
 def interface_range(interface):
+    if not isinstance(interface, string_types):
+        raise AnsibleFilterError('value must be of type string, got %s' % type(interface))
+
     parts = interface.rpartition('/')
     if parts[1]:
         prefix = '%s/' % parts[0]
