@@ -1,4 +1,3 @@
-#jinja2: lstrip_blocks: "true"
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
   {% for interface in port_channels|selectattr("type","equalto","routed_uplink")|list %}

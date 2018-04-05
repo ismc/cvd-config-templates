@@ -1,23 +1,20 @@
-#jinja2: lstrip_blocks: "true"
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <ip>
       <access-list>
         <standard xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
-          <name>RP-NETS</name>
-        {% set seq = [0] %}
-        {% for network in rendezvous_networks %}
-          {% set _ = seq.append(seq[-1] + 10) %}
+          <name>{{ cvd_multicast_rp_announce_name }}</name>
+          {% for item in cvd_multicast_rp_announce_list %}
           <access-list-seq-rule>
-            <sequence>{{ seq[-1] }}</sequence>
+            <sequence>{{ loop.index + 10 }}</sequence>
             <permit>
               <std-ace>
-                <ipv4-prefix>{{ network | ipaddr("network") }}</ipv4-prefix>
-                <mask>{{ network | ipaddr("wildcard") }}</mask>
+                <ipv4-prefix>{{ item | ipaddr("network") }}</ipv4-prefix>
+                <mask>{{ item | ipaddr("wildcard") }}</mask>
               </std-ace>
             </permit>
           </access-list-seq-rule>
-        {% endfor %}
+          {% endfor %}
         </standard>
       </access-list>
     </ip>

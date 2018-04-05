@@ -1,9 +1,8 @@
-#jinja2: lstrip_blocks: "True"
-#jinja2: trip_block: "True"
+{# version 1.0.0 #}
 
 {% set interfaces = [] %}
 {% for item in cvd_access_ports %}
-  {% set _ = interfaces.append(item | interface_range) %}
+  {% set _ = interfaces.extend(item | interface_range) %}
 {% endfor %}
 
 <config>
