@@ -12,7 +12,7 @@ from ansible.errors import AnsibleFilterError
 
 
 def interface_split(interface, key=None):
-    match = re.match(r'([A-Za-z]*)(.+)', interface)
+    match = re.match(r'([A-Za-z\-]*)(.+)', interface)
     if not match:
         raise FilterError('unable to parse interface %s' % interface)
     obj = {'name': match.group(1), 'index': match.group(2)}
