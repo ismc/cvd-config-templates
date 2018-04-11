@@ -11,14 +11,14 @@
           </authentication>
         </area>
 
-      {% for interface in uplinks %}
         {#
+        {% for interface in cvd_uplink_ports %}
         <interface>
           <name>{{ interface["interface"] }}</name>
           </no-passive>
         </interface>
+        {% endfor %}
         #}
-      {% endfor %}
 
       </ospf>
     </router>

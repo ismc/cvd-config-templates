@@ -11,15 +11,17 @@
             <autonomous-system>{{ cvd_eigrp_as }}</autonomous-system>
 
             # FIXME
-            {% for interface in uplinks %}
+            {% for item in uplink_ports %}
             <af-interface>
-              <name>{{ interface["interface"] }}</name>
+              <name>{{ item }}</name>
+
               {% for network in cvd_eigrp_summaries %}
               <summary-address>
                 <address>{{ network | ipaddr("network") }}</address>
                 <mask>{{ network | ipaddr("netmask") }}</mask>
               </summary-address>
               {% endfor %}
+
             </af-interface>
             {% endfor %}
 

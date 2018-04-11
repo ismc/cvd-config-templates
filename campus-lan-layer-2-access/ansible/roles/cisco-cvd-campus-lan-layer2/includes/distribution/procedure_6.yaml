@@ -8,15 +8,18 @@
     xml: "{{ lookup('template', 'templates/distribution/rendezvous_candidate.xml.j2') }}"
 
 - name: configure autorp mapping agent
-  netconf_config:
-    xml: "{{ lookup('template', 'templates/distribution/rendezvous_map.xml.j2') }}"
+  block:
+    - name: configure the mapping agent annouce list
+      netconf_config:
+        xml: "{{ lookup('template', 'templates/distribution/rendezvous_map.xml.j2') }}"
 
-- name: apply autorp mapping agent to interfaces
-  ios_config:
-    lines:
-      - ip pim send-rp-discovery Loopback0 scope 32
-      - ip pim rp-announce-filter rp-list RP-NETS
-  connection: network_cli
+    - name: apply autorp mapping agent to interfaces
+      ios_config:
+        lines:
+          - "ip pim send-rp-discovery Loopback0 scope 32"
+          - "ip pim rp-announce-filter rp-list {{ cvd_multicast_rp_annouce_name }}"
+      connection: network_cli
+  when: cvd_multicast_rp_annouce_name
 
 - name: filter rogue multicast sources
   netconf_config:

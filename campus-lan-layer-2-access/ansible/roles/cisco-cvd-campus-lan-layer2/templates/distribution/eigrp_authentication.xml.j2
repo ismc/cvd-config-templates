@@ -24,9 +24,9 @@
           <af-ip-list>
             <unicast-multicast>unicast</unicast-multicast>
             <autonomous-system>{{ cvd_eigrp_as }}</autonomous-system>
-            {% for interface in uplinks %}
+            {% for item in uplink_ports %}
             <af-interface>
-              <name>{{ interface["interface"] }}</name>
+              <name>{{ item }}</name>
               <authentication>
                 <mode>
                   <md5/>

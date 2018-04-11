@@ -5,24 +5,22 @@
       <access-list>
         <extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
           <name>MCAST-SOURCES</name>
-        {% set seq = [0] %}
-        {% for network in rendezvous_networks %}
-          {% set _ = seq.append(seq[-1] + 10) %}
+          {% for item in cvd_multicast_permitted_sources %}
           <access-list-seq-rule>
-            <sequence>{{ seq[-1] }}</sequence>
+            <sequence>{{ loop.index }}</sequence>
             <ace-rule>
               <action>permit</action>
               <protocol>ip</protocol>
-              <ipv4-address>{{ network | ipaddr("network") }}</ipv4-address>
-              <mask>{{ network | ipaddr("wildcard") }}</mask>
-              <dest-ipv4-address>{{ multicast_network | ipaddr("network") }}</dest-ipv4-address>
-              <dest-mask>{{ multicast_network | ipaddr("wildcard") }}</dest-mask>
+              <ipv4-address>{{ item | ipaddr("network") }}</ipv4-address>
+              <mask>{{ item | ipaddr("wildcard") }}</mask>
+              <dest-ipv4-address>{{ cvd_multicast_rp_address | ipaddr("network") }}</dest-ipv4-address>
+              <dest-mask>{{ cvd_multicast_rp_address | ipaddr("wildcard") }}</dest-mask>
             </ace-rule>
           </access-list-seq-rule>
-        {% endfor %}
+          {% endfor %}
 
           <access-list-seq-rule>
-            <sequence>{{ seq[-1] + 10}}</sequence>
+            <sequence>{{ cvd_multicast_permitted_sources | length + 1}}</sequence>
             <ace-rule>
               <action>deny</action>
               <protocol>ip</protocol>

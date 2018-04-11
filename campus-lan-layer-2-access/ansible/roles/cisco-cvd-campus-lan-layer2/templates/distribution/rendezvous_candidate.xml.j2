@@ -9,8 +9,8 @@
             <sequence>10</sequence>
             <permit>
               <std-ace>
-                <ipv4-prefix>{{ cvd_multicast_network | ipaddr("network")}}</ipv4-prefix>
-                <mask>{{ cvd_multicast_network | ipaddr("wildcard")}}</mask>
+                <ipv4-prefix>{{ cvd_multicast_rp_address | ipaddr("network")}}</ipv4-prefix>
+                <mask>{{ cvd_multicast_rp_address | ipaddr("wildcard")}}</mask>
               </std-ace>
             </permit>
           </access-list-seq-rule>

@@ -2,10 +2,10 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
 
-      {% for item in port_channels %}
-      {% if port_channel.type == 'routed_uplink' %}
+      {% for item in cvd_port_channels %}
+      {% if item.type | default(None) == 'routed_uplink' %}
       <Port-channel>
-        <name>{{ port_channel.id }}</name>
+        <name>{{ item.id }}</name>
         <ip>
           <pim>
             <sparse-mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-multicast">sparse-mode</sparse-mode>

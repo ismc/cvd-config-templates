@@ -1,6 +1,11 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
+
+
+     
+
+
   {% for interface_list in port_channels|selectattr("type","equalto","routed_uplink")|list %}
   {% for interface in interface_list['interfaces'] %}
     {% set interface_type = interface.split("Ethernet") %}
