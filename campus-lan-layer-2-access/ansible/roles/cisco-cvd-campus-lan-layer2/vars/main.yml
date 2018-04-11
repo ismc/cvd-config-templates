@@ -126,20 +126,30 @@ etherchannel_protocol: lacp
 # Set the network to use for configuring multicast routing.  This value should
 # be in the form of A.B.C.D/E where A.B.C.D is in the valid multicast range
 #
-# mulitcast_network: 239.1.0.0/16
+# mulitcast_rp_address: 239.1.0.0/16
 
+multicast_rp_annouce_name: RP-NETS
+multicast_rp_announce_list:
+  - 10.4.40.0/24
+  - 10.4.48.0/24
 
+multicast_permitted_sources:
+  - 1.2.3.4
+  - 5.6.7.8
 
 oob_interface: GigabitEthernet1/0/32
 oob_interface_ipv4_addr: 172.16.33.4/24
 oob_default_gateway: 172.16.33.1
 
-cvd_ospf_process_id: "{{ ospf_process_id | default(None) }}"
-cvd_ospf_router_id: "{{ ospf_router_id | default(None) }}"
-cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
-cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
+#ospf_process_id:
+#ospf_router_id:
+#ospf_networks:
+#ospf_summaries:
 
-access_ports: []
+#access_ports: []
+#
 
+# portchannels: []
+#
 
-
+# uplink_ports: []

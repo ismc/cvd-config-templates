@@ -10,7 +10,6 @@
       {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
-        <name>{{ interface }}</name>
         <load-interval>30</load-interval>
       </{{ item | interface_split('name') }}>
       {% endfor %}

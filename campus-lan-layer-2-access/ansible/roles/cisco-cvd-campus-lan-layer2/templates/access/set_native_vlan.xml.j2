@@ -1,44 +1,41 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
 
-  {% set portchannel_ids = [] %}
-  {% for item in uplinks %}
-    {% if item.interface.startswith("Port-channel") %}
-      {% set _ = portchannel_ids.append(interface.interface | interface_split('name')) %}
-    {% endif %}
-  {% endfor %}
 
-  {% for item in portchannel_ids %}
+    {% for interface in cvd_uplink_ports %}
+    {% set index = interface | interface_split('index') %}
+    {% set item = cvd_port_channels | selectattr('channel_id', 'equalto', index) | first %}
+
+    {% for member in item.members | default([]) %}
+    <interface>
+      <{{ member | interface_split('name') }}>
+        <name>{{ member | interface_split('index') }}</name>
+          <switchport>
+            <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+              <native>
+                <vlan>{{ cvd_anti_vlan_hop_id }}</vlan>
+              </native>
+            </trunk>
+          </switchport>
+        <description>{{ interface ~ " Member" }}</description>
+      </{{ member | interface_split('name') }}>
+    </interface>
+
     <interface>
       <Port-channel>
-        <name>{{ item }}</name>
+        <name>{{ interface | interface_split('index') }}</name>
           <switchport>
             <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
               <native>
-                <vlan>{{ cvd_anti_vlan_hop }}</vlan>
+                <vlan>{{ cvd_anti_vlan_hop_id }}</vlan>
               </native>
             </trunk>
           </switchport>
-        <description>{{ "Port-channel" ~ item }}</description>
+        <description>{{ interface }}</description>
       </Port-channel>
     </interface>
-
-    {% for interface in port_channels[id | int]["interfaces"] %}
-    {% set interface_type = interface.split("Ethernet") %}
-    <interface>
-      <{{ interface_type[0] ~ "Ethernet" }}>
-        <name>{{ interface_type[1] }}</name>
-          <switchport>
-            <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
-              <native>
-                <vlan>{{ anti_vlan_hop }}</vlan>
-              </native>
-            </trunk>
-          </switchport>
-        <description>{{ "Port-channel" ~ id ~ " Member" }}</description>
-      </{{ interface_type[0] ~ "Ethernet" }}>
-    </interface>
     {% endfor %}
+
     {% endfor %}
 
   </native>

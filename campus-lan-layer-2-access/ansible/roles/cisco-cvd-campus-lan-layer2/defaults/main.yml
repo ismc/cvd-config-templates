@@ -182,11 +182,23 @@ cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
 cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
 
 # templates/distribution/rendezvous_candidate.xml.j2
-cvd_multicast_network: "{{ multicast_network | default(None) }}"
+cvd_multicast_rp_address: "{{ multicast_rp_address | default(None) }}"
+
+# templates/distribution/rendezous_map.xml.j2
+cvd_multicast_rp_announce_name: "{{ multicast_rp_announce_name | default(None) }}"
+cvd_multicast_rp_announce_list: "{{ multicast_rp_announce_list | default([]) }}"
+
+cvd_multicast_permitted_sources: "{{ multicast_permitted_sources | default([]) }}"
+
 
 
 # templates/distribution/oob_ip.xml.j2
 cvd_oob_interface: "{{ oob_interface | default(None) }}"
 cvd_oob_interface_ipv4_addr: "{{ oob_interface_ipv4_addr | default(None) }}"
 cvd_oob_default_gateway: "{{ oob_default_gateway | default(None) }}"
+
+
+cvd_port_channels: "{{ port_channels | default({}) }}"
+cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
+
 
