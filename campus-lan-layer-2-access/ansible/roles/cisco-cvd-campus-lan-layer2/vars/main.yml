@@ -103,8 +103,6 @@ clock_summer_time: PDT
 #
 etherchannel_protocol: lacp
 
-
-
 # Configure EIGRP routing protocol.  The following entries can be used to set
 # various values when routing_protocol == 'eigrp'.
 #
@@ -128,28 +126,62 @@ etherchannel_protocol: lacp
 #
 # mulitcast_rp_address: 239.1.0.0/16
 
+# Configure the multicast AutoRP mapping agent.  The following values will
+# configure an ACL to limit the RPs that are announce.  Both the announce_name
+# and announce_list values are required.
+#
 multicast_rp_annouce_name: RP-NETS
 multicast_rp_announce_list:
   - 10.4.40.0/24
   - 10.4.48.0/24
 
+# Configure the multicast sources that are permitted on the network.  This will
+# filter any rogue multicast sources from overloading the router control plane.
+# Values for the permitted sources must be IPv4 host addresses in the form of
+# A.B.C.D
+#
 multicast_permitted_sources:
   - 1.2.3.4
   - 5.6.7.8
 
+# Configure the out-of-band management interface.  If these values are not
+# provided, then an out-of-band management inteface will not be configured on
+# the router.
+#
 oob_interface: GigabitEthernet1/0/32
 oob_interface_ipv4_addr: 172.16.33.4/24
 oob_default_gateway: 172.16.33.1
 
-#ospf_process_id:
-#ospf_router_id:
-#ospf_networks:
-#ospf_summaries:
-
-#access_ports: []
+# Configure the OSPF routing protocol.  The following values can be used to set
+# the various values for OSPF when routing_protocol == 'ospf'.  Note: the use
+# of OSPF is mutually exclusive with the use of EIGRP
 #
+# ospf_process_id:
+# ospf_router_id:
+# ospf_networks:
+# ospf_summaries:
 
-# portchannels: []
+# Configure the router interfaces as access ports.  This value accepts a list of
+# of ports to be set as access ports and have all services applied as defined
+# in the CVD document.  This value can accept individual ports or a range of
+# ports
 #
+# access_ports: []
 
+# Configure the router interfaces as trunk ports.  This value accepts a list of
+# ports to be set as trunk ports and have all services applied as defined in
+# the CVD document.  This value can accept individual ports or a range of
+# ports.
+#
 # uplink_ports: []
+
+# Configure the router port channel interfaces.  This list accepts a list of
+# hashed values that provide settings for creating Etherchannels
+#
+# struct
+# {
+#   channel_id: <str>
+#   type: <str>
+#   members: <list>
+# }
+# portchannels: []

@@ -49,31 +49,23 @@ cvd_settings_routing_protocol: "{{ routing_protocol | default(None) }}"
 # http://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 ###############################################################################
 
-# templates/common/hostname.xml.j2
-# includes/distribution/procedure_1.yaml
+# configure global system settings on the device
 cvd_hostname: "{{ inventory_hostname_short }}"
-
-# templates/common/name_servers.xml.j2
-# includes/access/procedure_2.yaml
-# includes/distribution/procedure_2.yaml
 cvd_name_servers: "{{ name_servers | default([]) }}"
-
-# templates/common/protocols.xml.j2
-# templates/distribution/dhcp_server.xml.j2
 cvd_domain_name: "{{ domain_name | default(None) }}"
 
-# templates/common/snmp.xml.j2
+# configure snmp settings
 cvd_snmp_community_ro: "{{ snmp_read_only_name }}"
 cvd_snmp_community_rw: "{{ snmp_read_write_name }}"
 
-# templates/common/management_acl.xml.j2
+# configure control plane management acl.
 cvd_management_acl_name: "{{ management_acl_name | default(None) }}"
 cvd_management_permitted_networks: "{{ management_permittted_networks | default([]) }}"
 
-# templates/common/local_login.xml.j2
-cvd_enable_secret: "{{ enable_secret }}"
+# set the enable mode password
+cvd_enable_secret: "{{ enable_secret | default(None) }}"
 
-# templates/common/local_login.xml.j2
+# configure local user accounts on the device.
 # struct
 # {
 #   username: <local account name>
@@ -82,7 +74,8 @@ cvd_enable_secret: "{{ enable_secret }}"
 # }
 cvd_local_accounts: "{{ local_accounts | default([]) }}"
 
-# templates/common/tacacs.xml.j2
+# configure tacacs servers on the device
+#
 # struct
 # {
 #   name: <tacacs server name identifier>
@@ -90,57 +83,35 @@ cvd_local_accounts: "{{ local_accounts | default([]) }}"
 #   key: <configured tacacs key>
 # }
 cvd_tacacs_servers: "{{ tacacs_servers | default([]) }}"
-
-# templates/common/tacacs.xml.j2
 cvd_tacacs_server_group_name: "{{ tacacs_server_group_name | default(None) }}"
 
-# templates/common/ntp.xml.j2
+# configure ntp servers and clock values
 cvd_ntp_servers: "{{ ntp_servers | default([]) }}"
 cvd_clock_timezone:  "{{ clock_timezone }}"
 cvd_clock_offset: "{{ clock_offset | string }}"
 cvd_clock_summer_time: "{{ clock_summer_time }}"
 
+# specify the mode for various ports on the device
 cvd_access_ports: "{{ access_ports | default([]) }}"
+cvd_port_channels: "{{ port_channels | default({}) }}"
+cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
 
-# templates/access/vlans.xml.j2
-# templates/access/access_ports_vlan.xml.j2
-# templates/access/arp_inspection.xml.j2
-# tempaltes/access/trunk_upload.xml.j2
-# templates/access/dhcp_snoop_global.xml.j2
+# configure vlans as specified in the cvd
 cvd_data_vlan_id: "{{ data_vlan }}"
-
-# templates/access/vlans.xml.j2
 cvd_data_vlan_name: "{{ data_vlan_name | default('Data') }}"
-
-# templates/access/vlans.xml.j2
-# templates/access/access_ports_vlan.xml.j2
-# templates/access/arp_inspection.xml.j2
-# tempaltes/access/trunk_upload.xml.j2
-# templates/access/dhcp_snoop_global.xml.j2
 cvd_voice_vlan_id: "{{ voice_vlan }}"
-
-# templates/access/vlans.xml.j2
 cvd_voice_vlan_name: "{{ voice_vlan_name | default('Voice') }}"
-
-# templates/access/vlans.xml.j2
-# templates/access/managemetn_interface.xml.j2
-# includes/access/procedure_3.yaml
-cvd_management_vlan_id: "{{ management_vlan | default(None) }}"
-
-# templates/access/vlans.xml.j2
-cvd_management_vlan_name: "{{ management_vlan_name | default('Management') }}"
-
-# templates/access/management_interface.xml.j2
-# should be in the form of A.B.C.D/E
-cvd_management_vlan_address: null
-
-# templates/access/vlans.xml.j2
-# templates/access/anti_vlan_hopping.xml.j2
 cvd_anti_vlan_hop_id: "{{ anti_vlan_hop | default(None) }}"
 cvd_anti_vlan_hop_name: "{{ anti_vlan_hop_name | default('AntiVlanHop') }}"
 
-# templates/common/default_gateway.xml.j2
-# includes/access/procedure_3.yaml
+# set the management vlan and ipv4 address
+cvd_management_vlan_id: "{{ management_vlan | default(None) }}"
+cvd_management_vlan_name: "{{ management_vlan_name | default('Management') }}"
+
+# should be in the form of A.B.C.D/E
+cvd_management_vlan_address: null
+
+# configure the device default gateway
 cvd_default_gateway: "{{ default_gateway | default(None) }}"
 
 # templates/access/ra_guard.xml.j2
@@ -162,12 +133,10 @@ cvd_dhcp_server_name_servers: "{{ dhcp_server_name_servers | default([]) }}"
 cvd_dhcp_server_exclude_start: "{{ dhcp_server_exclude_start | default(None) }}"
 cvd_dhcp_server_exclude_end: "{{ dhcp_server_exclude_end | default(None) }}"
 
-# templates/access/etherchannel.xml.j2
+# configure the etherchannel protocol to use
 cvd_etherchannel_protocol: "{{ etherchannel_protocol | default('lacp') }}"
 
-# templates/distribution/eigrp.xml.j2
-# templates/distribution/eigrp_summary.xml.j2
-# templates/distribution/eigrp_authentication.xml.j2
+# configure eigrp routing protocol values
 cvd_eigrp_name: "{{ eigrp_name | default(None) }}"
 cvd_eigrp_as: "{{ eigrp_as | default(None) }}"
 cvd_eigrp_networks: "{{ eigrp_networks | default([]) }}"
@@ -175,30 +144,20 @@ cvd_eigrp_summaries: "{{ eigrp_summaries | default([]) }}"
 cvd_eigrp_router_id: "{{ eigrp_router_id | default(None) }}"
 cvd_eigrp_authentication_keys: "{{ eigrp_authentication_keys | default([]) }}"
 
-# templates/distribution/ospf.xml.j2
+# configure ospf routing protocol values
 cvd_ospf_process_id: "{{ ospf_process_id | default(None) }}"
 cvd_ospf_router_id: "{{ ospf_router_id | default(None) }}"
 cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
 cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
 
-# templates/distribution/rendezvous_candidate.xml.j2
+# configure multicast values
 cvd_multicast_rp_address: "{{ multicast_rp_address | default(None) }}"
-
-# templates/distribution/rendezous_map.xml.j2
 cvd_multicast_rp_announce_name: "{{ multicast_rp_announce_name | default(None) }}"
 cvd_multicast_rp_announce_list: "{{ multicast_rp_announce_list | default([]) }}"
-
 cvd_multicast_permitted_sources: "{{ multicast_permitted_sources | default([]) }}"
 
-
-
-# templates/distribution/oob_ip.xml.j2
+# configure out of band interface values
 cvd_oob_interface: "{{ oob_interface | default(None) }}"
 cvd_oob_interface_ipv4_addr: "{{ oob_interface_ipv4_addr | default(None) }}"
 cvd_oob_default_gateway: "{{ oob_default_gateway | default(None) }}"
-
-
-cvd_port_channels: "{{ port_channels | default({}) }}"
-cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
-
 
