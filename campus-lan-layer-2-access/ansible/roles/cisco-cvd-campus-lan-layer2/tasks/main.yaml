@@ -7,6 +7,7 @@
       - configure
       - hostvars
       - dump
+      - noop
 
 - name: validate the value for target
   fail:
