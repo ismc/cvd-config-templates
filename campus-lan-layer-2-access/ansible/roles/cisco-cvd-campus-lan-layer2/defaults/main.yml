@@ -38,6 +38,13 @@ cvd_settings_enable_multicast_rp: "{{ enable_multicast_rp | bool | default(True)
 # Valid values for this setting are one of either 'ospf' or 'eigrp'
 cvd_settings_routing_protocol: "{{ routing_protocol | default(None) }}"
 
+# This value will control whether or not a DHCP server will be configured on
+# the distribution routers.  Setting this value to True will cause the DHCP
+# server to be configured.  See the DHCP Server configuration settings to
+# configure the DHCP server values
+cvd_settings_enable_dhcp_server: "{{ enable_dhcp_server | bool | default(False) }}"
+
+
 
 ###############################################################################
 # The settings in this section are configuration values that configure various
@@ -49,23 +56,26 @@ cvd_settings_routing_protocol: "{{ routing_protocol | default(None) }}"
 # http://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 ###############################################################################
 
-# configure global system settings on the device
-cvd_hostname: "{{ inventory_hostname_short }}"
+
+# Configure global device settings
+#
+# Global device settings are settings that are configured on all devices
+# regardless of the device role.  These typically include system parameters
+# such as hostname, domain name, ntp, etc.  These values (if provided) are
+# always configured on devices
+
+cvd_device_model: "{{ device_model | default(None) }}"
+cvd_device_role: "{{ device_role | default(None) }}"
+
+cvd_hostname: "{{ hostname | inventory_hostname_short }}"
 cvd_name_servers: "{{ name_servers | default([]) }}"
 cvd_domain_name: "{{ domain_name | default(None) }}"
 
-# configure snmp settings
-cvd_snmp_community_ro: "{{ snmp_read_only_name }}"
-cvd_snmp_community_rw: "{{ snmp_read_write_name }}"
+cvd_snmp_community_ro: "{{ snmp_read_only_name | default(None) }}"
+cvd_snmp_community_rw: "{{ snmp_read_write_name | default(None) }}"
 
-# configure control plane management acl.
-cvd_management_acl_name: "{{ management_acl_name | default(None) }}"
-cvd_management_permitted_networks: "{{ management_permittted_networks | default([]) }}"
-
-# set the enable mode password
 cvd_enable_secret: "{{ enable_secret | default(None) }}"
 
-# configure local user accounts on the device.
 # struct
 # {
 #   username: <local account name>
@@ -74,8 +84,6 @@ cvd_enable_secret: "{{ enable_secret | default(None) }}"
 # }
 cvd_local_accounts: "{{ local_accounts | default([]) }}"
 
-# configure tacacs servers on the device
-#
 # struct
 # {
 #   name: <tacacs server name identifier>
@@ -85,25 +93,96 @@ cvd_local_accounts: "{{ local_accounts | default([]) }}"
 cvd_tacacs_servers: "{{ tacacs_servers | default([]) }}"
 cvd_tacacs_server_group_name: "{{ tacacs_server_group_name | default(None) }}"
 
-# configure ntp servers and clock values
 cvd_ntp_servers: "{{ ntp_servers | default([]) }}"
+
 cvd_clock_timezone:  "{{ clock_timezone }}"
 cvd_clock_offset: "{{ clock_offset | string }}"
 cvd_clock_summer_time: "{{ clock_summer_time }}"
 
-# specify the mode for various ports on the device
-cvd_access_ports: "{{ access_ports | default([]) }}"
-cvd_port_channels: "{{ port_channels | default({}) }}"
-cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
+# Configure common device settings
+#
+# Common device settings are used to configure features on both distribution
+# and access role devices.  These values are typically provided on a per host
+# or per group basis
 
-# configure vlans as specified in the cvd
-cvd_data_vlan_id: "{{ data_vlan }}"
-cvd_data_vlan_name: "{{ data_vlan_name | default('Data') }}"
-cvd_voice_vlan_id: "{{ voice_vlan }}"
-cvd_voice_vlan_name: "{{ voice_vlan_name | default('Voice') }}"
+# specify the mode for various ports on the device
+cvd_port_channels: "{{ port_channels | default({}) }}"
+
+# configure the etherchannel protocol to use
+cvd_etherchannel_protocol: "{{ etherchannel_protocol | default('lacp') }}"
+
 cvd_anti_vlan_hop_id: "{{ anti_vlan_hop | default(None) }}"
 cvd_anti_vlan_hop_name: "{{ anti_vlan_hop_name | default('AntiVlanHop') }}"
 
+# configure control plane management acl.
+cvd_management_acl_name: "{{ management_acl_name | default(None) }}"
+cvd_management_permitted_networks: "{{ management_permittted_networks | default([]) }}"
+
+# Configure distribution device role settings
+cvd_oob_interface: "{{ oob_interface | default(None) }}"
+cvd_oob_interface_ipv4_addr: "{{ oob_interface_ipv4_addr | default(None) }}"
+cvd_oob_default_gateway: "{{ oob_default_gateway | default(None) }}"
+
+# FIXME:
+cvd_loopback0_address: "{{ loopback0 | default(None) }}"
+cvd_loopback1: "{{ loopback0 | default(None) }}"
+
+# DHCP Server configuration values
+#
+# The configuration settings below configure the local DHCP server. These
+# settings are only configured if cvd_settings_enable_dhcp_server is set to
+# True
+cvd_dhcp_server_network: "{{ dhcp_server_network | default(None) }}"
+cvd_dhcp_server_default_router: "{{ dhcp_server_default_router | default(None) }}"
+cvd_dhcp_server_domain_name: "{{ dhcp_server_domain_name | default(None) }}"
+cvd_dhcp_server_name_servers: "{{ dhcp_server_name_servers | default([]) }}"
+cvd_dhcp_server_exclude_start: "{{ dhcp_server_exclude_start | default(None) }}"
+cvd_dhcp_server_exclude_end: "{{ dhcp_server_exclude_end | default(None) }}"
+
+# EIGRP routing configuration values
+#
+# The configuration settings below configure the EIGRP routing process on the
+# distribution routers.  These settings are only used if whe the variable
+# cvd_settings_routing_protocol is set to 'eigrp'
+cvd_eigrp_name: "{{ eigrp_name | default(None) }}"
+cvd_eigrp_as: "{{ eigrp_as | default(None) }}"
+cvd_eigrp_networks: "{{ eigrp_networks | default([]) }}"
+cvd_eigrp_summaries: "{{ eigrp_summaries | default([]) }}"
+cvd_eigrp_router_id: "{{ eigrp_router_id | default(None) }}"
+cvd_eigrp_authentication_keys: "{{ eigrp_authentication_keys | default([]) }}"
+
+# OSPF routing configuration values
+#
+# The configuration settings below configure the OSPF routing protocol process
+# on the distribution router.  These configuration settings are only used if
+# cvd_settings_routing_protocol is set to 'ospf'
+cvd_ospf_process_id: "{{ ospf_process_id | default(None) }}"
+cvd_ospf_router_id: "{{ ospf_router_id | default(None) }}"
+cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
+cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
+
+# Multicast RP configuration values
+#
+# The configuration settings below configure the Mutlicast RP on the
+# distribution router.  These settings are only used if the variable
+# cvd_settings_enable_multicast_rp is set to True
+cvd_multicast_rp_address: "{{ multicast_rp_address | default(None) }}"
+cvd_multicast_rp_announce_name: "{{ multicast_rp_announce_name | default(None) }}"
+cvd_multicast_rp_announce_list: "{{ multicast_rp_announce_list | default([]) }}"
+cvd_multicast_permitted_sources: "{{ multicast_permitted_sources | default([]) }}"
+
+# Configure access device role settings
+#
+# The configuration settings below are used to configure a device that has been
+# specified as an access device.  These settings are only used when the value
+# of cvd_device_role is set to 'access'
+#
+cvd_data_vlan_id: "{{ data_vlan | default(None) }}"
+cvd_data_vlan_name: "{{ data_vlan_name | default('Data') }}"
+cvd_voice_vlan_id: "{{ voice_vlan | default(None) }}"
+cvd_voice_vlan_name: "{{ voice_vlan_name | default('Voice') }}"
+
+# configure vlans as specified in the cvd
 # set the management vlan and ipv4 address
 cvd_management_vlan_id: "{{ management_vlan | default(None) }}"
 cvd_management_vlan_name: "{{ management_vlan_name | default('Management') }}"
@@ -117,47 +196,13 @@ cvd_default_gateway: "{{ default_gateway | default(None) }}"
 # templates/access/ra_guard.xml.j2
 cvd_ra_guard_policy_name: "{{ ra_guard_policy_name | default('HOST_POLICY') }}"
 
-# templates/distribution/loopback_ip.xml.j2
-# includes/distribution/procedure_3.yaml
-# FIXME:
-cvd_loopback0_address: "{{ loopback0 | default(None) }}"
+# specify the mode for various ports on the device
+cvd_access_ports: "{{ access_ports | default([]) }}"
+cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
 
-# templates/distribution/rendezvous_loopback.xml.j2
-cvd_loopback1: "{{ loopback0 | default(None) }}"
-
-# templates/distribution/dhcp_server.xml.j2
-cvd_dhcp_server_network: "{{ dhcp_server_network | default(None) }}"
-cvd_dhcp_server_default_router: "{{ dhcp_server_default_router | default(None) }}"
-cvd_dhcp_server_domain_name: "{{ dhcp_server_domain_name | default(None) }}"
-cvd_dhcp_server_name_servers: "{{ dhcp_server_name_servers | default([]) }}"
-cvd_dhcp_server_exclude_start: "{{ dhcp_server_exclude_start | default(None) }}"
-cvd_dhcp_server_exclude_end: "{{ dhcp_server_exclude_end | default(None) }}"
-
-# configure the etherchannel protocol to use
-cvd_etherchannel_protocol: "{{ etherchannel_protocol | default('lacp') }}"
-
-# configure eigrp routing protocol values
-cvd_eigrp_name: "{{ eigrp_name | default(None) }}"
-cvd_eigrp_as: "{{ eigrp_as | default(None) }}"
-cvd_eigrp_networks: "{{ eigrp_networks | default([]) }}"
-cvd_eigrp_summaries: "{{ eigrp_summaries | default([]) }}"
-cvd_eigrp_router_id: "{{ eigrp_router_id | default(None) }}"
-cvd_eigrp_authentication_keys: "{{ eigrp_authentication_keys | default([]) }}"
-
-# configure ospf routing protocol values
-cvd_ospf_process_id: "{{ ospf_process_id | default(None) }}"
-cvd_ospf_router_id: "{{ ospf_router_id | default(None) }}"
-cvd_ospf_networks: "{{ ospf_networks | default([]) }}"
-cvd_ospf_summaries: "{{ ospf_summaries | default([]) }}"
-
-# configure multicast values
-cvd_multicast_rp_address: "{{ multicast_rp_address | default(None) }}"
-cvd_multicast_rp_announce_name: "{{ multicast_rp_announce_name | default(None) }}"
-cvd_multicast_rp_announce_list: "{{ multicast_rp_announce_list | default([]) }}"
-cvd_multicast_permitted_sources: "{{ multicast_permitted_sources | default([]) }}"
-
-# configure out of band interface values
-cvd_oob_interface: "{{ oob_interface | default(None) }}"
-cvd_oob_interface_ipv4_addr: "{{ oob_interface_ipv4_addr | default(None) }}"
-cvd_oob_default_gateway: "{{ oob_default_gateway | default(None) }}"
-
+# struct
+# {
+#   switch_id: <int>
+#   priority: <int>
+# }
+cvd_stack_config: "{{ stack_config | default([]) }}"
