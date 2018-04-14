@@ -15,10 +15,10 @@
       {% endif %}
       {% endfor %}
 
-      {% for id, vlan in vlan_data.items() %}
-      {% if vlan.ipv4_network is defined %}
+      {% for item in cvd_vlans %} 
+      {% if item.ipv4 is defined %}
       <Vlan>
-        <name>{{ id }}</name>
+        <name>{{ item.vlan_id }}</name>
           <ip>
             <pim>
               <sparse-mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-multicast">sparse-mode</sparse-mode>

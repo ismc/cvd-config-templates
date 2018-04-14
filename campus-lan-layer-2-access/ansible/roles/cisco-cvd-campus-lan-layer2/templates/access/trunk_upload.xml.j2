@@ -62,7 +62,7 @@
           <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <allowed>
               <vlan>
-                <vlans>{{ data_vlan_id | default(cvd_data_vlan_id) }},{{ voice_vlan_id | default(cvd_voice_vlan_id) }},{{ mgmt_vlan }}</vlans>
+                <vlans>{{ cvd_data_vlan_id }},{{ cvd_voice_vlan_id }},{{ cvd_management_vlan_id }}</vlans>
               </vlan>
             </allowed>
           </trunk>

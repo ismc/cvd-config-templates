@@ -1,0 +1,46 @@
+---
+device_role: access
+
+device_model: null
+
+# Configure VLANS on the switch.  The settings define the data and voice vlan
+# configuration values.  These values should be provided on a per-host basis.
+#
+data_vlan: null
+data_vlan_name: Data
+
+voice_vlan: null
+voice_vlan_name: Voice
+
+# Configure the in-band management interface.  These values configure an
+# in-band management vlan on the access switch.  If the management_vlan is not
+# specified, the in-band SVI will not be created.
+#
+management_vlan: null
+management_vlan_name: Management
+# management_vlan_address: null
+
+# Configure the IPv6 First Hop Security global policy.  This setting defines
+# the policy name to configure.
+#
+ra_guard_policy_name: HOST_POLICY
+
+# Configure the router interfaces as access ports.  This value accepts a list of
+# of ports to be set as access ports and have all services applied as defined
+# in the CVD document.  This value can accept individual ports or a range of
+# ports
+#
+access_ports: []
+
+# Configure the router interfaces as trunk ports.  This value accepts a list of
+# ports to be set as trunk ports and have all services applied as defined in
+# the CVD document.  This value can accept individual ports or a range of
+# ports.
+#
+uplink_ports: []
+
+# Configure switch stack values.  These values are used to define the preferred
+# active switch and the preferred hot-standby switch.  These values should be
+# provided on a per host basis
+#
+stack_config: []

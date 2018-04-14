@@ -3,7 +3,7 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
 
-    {% for port_channel in port_channels|selectattr("type", "equalto", "access_downlink")|list %}
+    {% for port_channel in cvd_port_channels|selectattr("type", "equalto", "access_downlink")|list %}
       {% for interface in port_channel["interfaces"] %}
       {% set interface_type = interface.split("Ethernet") %}
       <{{ interface_type[0] ~ "Ethernet" }}>
@@ -41,7 +41,7 @@
       {% endfor %}
     {% endfor %}
 
-    {% for port_channel in port_channels|selectattr("type", "equalto", "access_downlink")|list %}
+    {% for port_channel in cvd_port_channels|selectattr("type", "equalto", "access_downlink")|list %}
       <Port-channel>
         <name>{{ port_channel["id"] }}</name>
         <description>Etherchannel Link to {{ port_channel["access_nei"] }}</description>

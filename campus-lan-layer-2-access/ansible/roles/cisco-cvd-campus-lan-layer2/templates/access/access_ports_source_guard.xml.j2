@@ -6,20 +6,16 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
-
         <ip>
           <verify>
             <source/>
           </verify>
         </ip>
-
       </{{ item | interface_split('name') }}>
       {% endfor %}
-
     </interface>
   </native>
 </config>

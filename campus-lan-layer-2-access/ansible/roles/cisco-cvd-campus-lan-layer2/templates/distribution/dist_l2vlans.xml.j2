@@ -1,12 +1,12 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
       <vlan>
-      {% for id, vlan in vlan_data.items() %}
+        {% for item in cvd_vlans %}
         <vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
-          <id>{{ id }}</id>
-          <name>{{ vlan['vlan_desc'].replace(' ', '_')[:20] }}</name>
+          <id>{{ item.vlan_id }}</id>
+          <name>{{ item.name }}</name>
         </vlan-list>
-      {% endfor %}
+        {% endfor %}
       </vlan>
   </native>
 </config>

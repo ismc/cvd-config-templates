@@ -1,14 +1,11 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
     <interface>
       <{{ cvd_oob_interface | interface_split('name') }}>
         <name>{{ cvd_oob_interface | interface_split('index') }}</name>
-
         <switchport-conf>
           <switchport>false</switchport>
         </switchport-conf>
-
         <ip>
           <address>
             <primary>
@@ -17,23 +14,18 @@
             </primary>
           </address>
         </ip>
-
       </{{ cvd_oob_interface | interface_split('name') }}>
     </interface>
-
     <ip>
       <route>
         <ip-route-interface-forwarding-list>
-
-          <prefix>{{ cvd_oob_interface_ipv4_addr | ipaddr('network') }}</prefix>
-          <mask>{{ cvd_oob_interface_ipv4_addr | ipaddr('netmask') }}</mask>
+          <prefix>{{ cvd_oob_interface_ipv4 | ipaddr('network') }}</prefix>
+          <mask>{{ cvd_oob_interface_ipv4 | ipaddr('netmask') }}</mask>
           <fwd-list>
             <fwd>{{ cvd_oob_default_gateway }}</fwd>
           </fwd-list>
-
         </ip-route-interface-forwarding-list>
       </route>
     </ip>
-
   </native>
 </config>

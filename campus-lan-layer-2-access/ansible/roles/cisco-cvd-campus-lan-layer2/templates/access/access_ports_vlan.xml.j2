@@ -1,5 +1,3 @@
-{# version 1.0.0 #}
-
 {% set interfaces = [] %}
 {% for item in cvd_access_ports %}
   {% set _ = interfaces.extend(item | interface_range) %}
@@ -16,13 +14,13 @@
         <switchport>
           <access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <vlan>
-              <vlan>{{ data_vlan_id | default(cvd_data_vlan_id) }}</vlan>
+              <vlan>{{ cvd_data_vlan_id }}</vlan>
             </vlan>
           </access>
 
           <voice xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <vlan>
-              <vlan>{{ voice_vlan_id | default(cvd_voice_vlan_id) }}</vlan>
+              <vlan>{{ cvd_voice_vlan_id }}</vlan>
             </vlan>
           </voice>
 

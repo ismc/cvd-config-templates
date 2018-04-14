@@ -16,11 +16,11 @@
 
     - name: exclude out-of-band management interface from vss shutdown
       ios_config:
-        lines: "dual-active exclude interface {{ oob_interface['interface']  }}"
-        parents: "switch virtual domain {{ vss_domain }}"
-      when: model | string in ['6500']
+        lines: "dual-active exclude interface {{ cvd_oob_interface  }}"
+        parents: "switch virtual domain {{ cvd_vss_domain }}"
+      when: cvd_device_model | string in ['6500']
       connection: network_cli
-  when: oob_interface
+  when: cvd_oob_interface
 
 - name: configure system process to use loopback interface address
   netconf_config:

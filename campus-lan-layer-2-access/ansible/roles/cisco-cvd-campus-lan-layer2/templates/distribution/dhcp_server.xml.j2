@@ -6,7 +6,6 @@
         <name>{{ cvd_domain_name }}</name>
       </domain>
       {% endif %}
-
       <dhcp>
         {% if cvd_dhcp_server_exclude_start and cvd_dhcp_server_exclude_end %}
         <excluded-address xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-dhcp">
@@ -14,29 +13,23 @@
           <high-address>{{ cvd_dhcp_server_exclude_end }}</high-address>
         </excluded-address>
         {% endif %}
-
         <pool xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-dhcp">
           <id>access</id>
-
           {% if cvd_dhcp_server_default_router %}
           <default-router>{{ cvd_dhcp_server_default_router }}</default-router>
           {% endif %}
-
           {% for item in cvd_dhcp_server_name_servers %}
           <dns-server>{{ item }}</dns-server>
           {% endfor %}
-
           {% if cvd_dhcp_server_domain_name %}
           <domain-name>{{ cvd_dhcp_server_domain_name }}</domain-name>
           {% endif %}
-
           <network>
             <number>{{ cvd_dhcp_server_network|ipaddr('network') }}</number>
             <mask>{{ cvd_dhcp_server_network|ipaddr('netmask') }}</mask>
           </network>
         </pool>
       </dhcp>
-
     </ip>
   </native>
 </config>

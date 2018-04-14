@@ -6,11 +6,9 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
-
         <ip>
           <arp>
             <inspection>
@@ -19,7 +17,6 @@
               </limit>
             </inspection>
           </arp>
-
           <dhcp>
             <snooping xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-dhcp">
               <limit>
@@ -27,11 +24,9 @@
               </limit>
             </snooping>
           </dhcp>
-
         </ip>
       </{{ item | interface_split('name') }}>
       {% endfor %}
-
     </interface>
   </native>
 </config>

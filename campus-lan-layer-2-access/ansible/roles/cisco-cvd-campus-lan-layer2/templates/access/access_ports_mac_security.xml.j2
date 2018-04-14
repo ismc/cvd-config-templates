@@ -6,11 +6,9 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
-
         <switchport>
           <access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch"></access>
           <port-security xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
@@ -19,10 +17,8 @@
             </maximum>
           </port-security>
         </switchport>
-
       </{{ item | interface_split('name') }}>
       {% endfor %}
-
     </interface>
   </native>
 </config>

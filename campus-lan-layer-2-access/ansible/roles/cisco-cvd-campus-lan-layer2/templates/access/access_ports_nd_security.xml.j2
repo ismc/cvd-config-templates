@@ -6,22 +6,18 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for item in interfaces %}
       <{{ item | interface_split('name') }}>
         <name>{{ item | interface_split('index') }}</name>
-
         <ipv6>
           <nd>
             <raguard xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-nd">
-              <attach-policy>HOST_POLICY</attach-policy>
+              <attach-policy>{{ cvd_ra_guard_policy_name }}</attach-policy>
             </raguard>
           </nd>
         </ipv6>
-
       </{{ item | interface_split('name') }}>
       {% endfor %}
-
     </interface>
   </native>
 </config>

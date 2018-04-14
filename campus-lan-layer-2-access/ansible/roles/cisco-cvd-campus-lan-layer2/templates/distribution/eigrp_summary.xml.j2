@@ -11,7 +11,7 @@
             <autonomous-system>{{ cvd_eigrp_as }}</autonomous-system>
 
             # FIXME
-            {% for item in uplink_ports %}
+            {% for item in cvd_uplink_ports %}
             <af-interface>
               <name>{{ item }}</name>
 

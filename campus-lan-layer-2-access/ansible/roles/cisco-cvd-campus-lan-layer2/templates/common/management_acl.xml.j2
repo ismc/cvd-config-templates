@@ -63,7 +63,7 @@
           <acccess-list>
             <direction>in</direction>
             <access-list>{{ cvd_management_acl_name }}</access-list>
-            {% if model | string in ["3650", "3850"] %}
+            {% if cvd_device_model | string in ["3650", "3850"] %}
             <vrf-also/>
             {% endif %}
           </acccess-list>

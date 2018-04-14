@@ -12,14 +12,14 @@
           <name>{{ cvd_voice_vlan_name }}</name>
         </vlan-list>
 
-        {% if management_vlan_id | default(cvd_management_vlan_id) %}
+        {% if cvd_management_vlan_id %}
         <vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
           <id>{{ cvd_management_vlan_id }}</id>
           <name>{{ cvd_management_vlan_name }}</name>
         </vlan-list>
         {% endif %}
 
-        {% if anti_vlan_hop_id | default(cvd_anti_vlan_hop_id) %}
+        {% if cvd_anti_vlan_hop_id %}
         <vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
           <id>{{ cvd_anti_vlan_hop_id }}</id>
           <name>{{ cvd_anti_vlan_hop_name }}</name>

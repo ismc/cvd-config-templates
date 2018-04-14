@@ -9,9 +9,9 @@
       ios_config:
         lines: platform multicast forwarding fast-redirect
         parents: "interface {{ item.interface }}"
-      with_items: "{{ uplinks }}"
+      with_items: "{{ cvd_uplink_ports }}"
       connection: network_cli
-  when: uplinks and uplinks[0]['interface'].startswith('Port-channel')
+  when: item.startswith('Port-channel')
 
 - name: configure eigrp routing features
   block:

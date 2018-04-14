@@ -1,6 +1,5 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
     <snmp-server>
       {% if cvd_snmp_community_ro %}
       <community xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-snmp">
@@ -8,7 +7,6 @@
         <RO/>
       </community>
       {% endif %}
-
       {% if cvd_snmp_community_rw %}
       <community xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-snmp">
         <name>{{ cvd_snmp_community_rw }}</name>
@@ -16,6 +14,5 @@
       </community>
       {% endif %}
     </snmp-server>
-
   </native>
 </config>

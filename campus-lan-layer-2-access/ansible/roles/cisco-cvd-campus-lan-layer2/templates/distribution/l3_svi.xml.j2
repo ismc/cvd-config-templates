@@ -2,15 +2,15 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
 
-      {% for id, vlan in vlan_data.items() %}
-      {% if vlan.ipv4_network is defined %}
+      {% for item in cvd_vlans %}
+      {% if item.ipv4 %}
       <Vlan>
-        <name>{{ id }}</name>
+        <name>{{ item.vlan_id }}</name>
         <ip>
           <address>
             <primary>
-              <address>{{ vlan.ipv4_network | ipaddr('1') | ipaddr('address') }}</address>
-              <mask>{{ vlan.ipv4_network | ipaddr('netmask') }}</mask>
+              <address>{{ vlan.ipv4 | ipaddr('address') }}</address>
+              <mask>{{ vlan.ipv4 | ipaddr('netmask') }}</mask>
             </primary>
           </address>
 

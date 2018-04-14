@@ -2,11 +2,11 @@
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <port-channel>
       <load-balance xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
-      {% if model | string in ["3650", "3850"] %}
+      {% if cvd_device_model | string in ["3650", "3850"] %}
         <load-balance>src-dst-mixed-ip-port</load-balance>
-      {% elif model | string in ["2960", "4500"] %}
+      {% elif cvd_device_model | string in ["2960", "4500"] %}
         <load-balance>src-dst-ip</load-balance>
-      {% elif model | string in ["6500", "6800"] %}
+      {% elif cvd_device_model | string in ["6500", "6800"] %}
         <load-balance>vlan-src-dst-mixed-ip-port</load-balance>
       {% endif %}
       </load-balance>

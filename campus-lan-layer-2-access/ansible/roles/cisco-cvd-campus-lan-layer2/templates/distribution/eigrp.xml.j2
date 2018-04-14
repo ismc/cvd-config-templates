@@ -1,10 +1,8 @@
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
     <router>
       <eigrp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-eigrp">
         <id>{{ cvd_eigrp_name }}</id>
-
         <address-family>
           <type>ipv4</type>
           <af-ip-list>
@@ -14,14 +12,12 @@
               <name>default</name>
               <passive-interface/>
             </af-interface>
-            
             {% for item in cvd_eigrp_networks %}
             <network>
               <number>{{ item | ipaddr('network') }}</number>
               <wild-card>{{ item | ipaddr('wildcard') }}</wild-card>
             </network>
             {% endfor %}
-
             <eigrp>
               <router-id>{{ cvd_eigrp_router_id }}</router-id>
               <stub>
@@ -30,9 +26,7 @@
             </eigrp>
           </af-ip-list>
         </address-family>
-
       </eigrp>
     </router>
-
   </native>
 </config>
