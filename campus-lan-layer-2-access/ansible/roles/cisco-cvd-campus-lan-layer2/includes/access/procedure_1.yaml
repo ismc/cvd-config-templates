@@ -2,15 +2,15 @@
 - name: set the stack switch priority
   ios_command:
     commands: "switch {{ item.switch_id }} priority {{ item.priority }}"
-  with_items: "{{ stack_config }}"
-  when: stack_config and model | string in ['3850', '3650', '2960']
+  with_items: "{{ cvd_stack_config }}"
+  when: cvd_stack_config and cvd_device_model | string in ['3850', '3650', '2960']
   connection: network_cli
 
 - name: set the `stack-mac persistent timer` to 0
   ios_config:
     lines: stack-mac persistent timer 0
     running_config: "{{ configuration.stdout }}"
-  when: "model | string == '2960'"
+  when: "cvd_device_model | string == '2960'"
   connection: network_cli
 
 - name: configure etherchannels to use both source and destination ip address for load balancing
@@ -25,7 +25,7 @@
         running_config: "{{ configuration.stdout }}"
         lines:
           - "macro name AccessEdgeQoS\r trust device cisco-phone\r service-policy input CISCO-PHONE\r service-policy operation 2P6Q3T\r@\rmacro name EgressQoS\r service-policy operation 2P6Q3T\r@\r"
-      when: model | string in ['3850','9300','3650']
+      when: cvd_device_model | string in ['3850','9300','3650']
       connection: network_cli
 
     - name: "push config to remotes ['2960']"
@@ -35,7 +35,7 @@
         provider: "{{ provider }}"
         lines:
           - "EgressQoS\r mls qos trust dscp\n queue-set 1\r srr-queue bandwidth share 1 30 35 5\r priority-queue out\r@\r"
-      when: model | string in ['2960']
+      when: cvd_device_model | string in ['2960']
       connection: network_cli
 
     - name: "push config to remotes ['4500']"
@@ -45,7 +45,7 @@
         provider: "{{ provider }}"
         lines:
           - "macro name AccessEdgeQoS\r auto qos voip cisco-phone\r@\rmacro name EgressQoS\r service-policy operation 1P7Q1T\r@\r"
-      when: model | string in ['4500']
+      when: cvd_device_model | string in ['4500']
       connection: network_cli
       register: operation
 
@@ -58,8 +58,8 @@
 
 - name: push macro configs to all devices except Catalyst 2960
   netconf_config:
-    xml: "{{ lookup('template', 'templates/access/' ~ model ~ '_' ~ device_role ~ '_data.j2') }}"
-  when: "model | string != '2960'"
+    xml: "{{ lookup('template', 'templates/access/' ~ cvd_device_model ~ '_' ~ device_role ~ '_data.j2') }}"
+  when: "cvd_device_model | string != '2960'"
   register: operation
 
 - name: wait an arbitrary period for config sync
@@ -72,7 +72,7 @@
   ios_config:
     running_config: "{{ configuration.stdout }}"
     lines: software auto-upgrade enable
-  when: "model | string in ['3850', '3650']"
+  when: "cvd_device_model | string in ['3850', '3650']"
   connection: network_cli
 
 - name: configure switch stack power
@@ -88,11 +88,11 @@
         lines: stack PowerStack-1
         parents: "stack-power switch {{ item.switch_id }}"
         running_config: "{{ configuration.stdout }}"
-      with_items: "{{ stack_config }}"
-  when: "model | string == '3850'"
+      with_items: "{{ cvd_stack_config }}"
+  when: "cvd_device_model | string == '3850'"
   connection: network_cli
 
 - name: enable switch stack redundancy on Catalyst 4500
   netconf_config:
     xml: "{{ lookup('template', 'templates/common/switch_redundancy.xml.j2') }}"
-  when: "model == '4500'"
+  when: "cvd_device_model == '4500'"

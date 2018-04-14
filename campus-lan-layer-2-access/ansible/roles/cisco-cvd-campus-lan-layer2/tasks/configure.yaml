@@ -11,7 +11,7 @@
   register: configuration
 
 - name: include device role specific tasks
-  include_tasks: "includes/{{ device_role }}/main.yaml"
+  include_tasks: "includes/{{ cvd_device_role }}/main.yaml"
 
 - name: save the current running-config to startup-config
   ios_config:

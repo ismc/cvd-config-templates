@@ -44,7 +44,7 @@
 
 - name: set the interace mac aging time
   netconf_config:
-    xml: "{{ lookup('template', 'templates/access/access_ports_mac_security.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/access/access_ports_aging_security.xml.j2') }}"
 
 - name: configure the restrict option to drop traffic from mac addresses
   netconf_config:
@@ -80,5 +80,5 @@
 - name: increase the default queue for catalyst 2960-x
   ios_config:
     lines: mls qos queue-set operation 1 threshold 3 100 100 100 3200
-  when: "model | string == '2960'"
+  when: "cvd_device_model | string == '2960'"
   connection: network_cli

@@ -3,7 +3,7 @@
   netconf_config:
     xml: "{{ lookup('template', 'templates/access/vlans.xml.j2') }}"
 
-- name: configure the management ipv4 interface
+- name: configure the management ipv4 interface (if configured)
   netconf_config:
     xml: "{{ lookup('template', 'templates/access/management_interface.xml.j2') }}"
   when: cvd_management_vlan_id
