@@ -2,49 +2,11 @@
 # vars file for cisco-cvd-campus-lan-layer2
 #
 
-# Configure the list of DNS name servers to use for name lookups.  Below is an
-# example of setting the DNS name servers.  Name servers can be configured
-# using either FQDN or IPv4 address format.
-#
-name_servers:
-  - 10.4.48.10
-
-# Configure the default domain name used when constructing the device's fully
-# qualified domain name.  This value will also be used as the defaule domain
-# name for performing name resolution
-#
-domain_name: cisco.local
-
-# Configure the enable mode secret password.  Uncomment the line below to
-# configure the enable mode password.  The value for the password should be
-# provided in plain text.
-#
-# enable_secret: C1sco123
-
-# Configure the list of local user accounts to create on the switches.  The
-# list of accounts must define the following values:
-#
-# username: The name used to login to the device
-# password: The plain text password to set for the user
-# privilege_level: An integer value in the range of 0 to 15
-#
-#local_accounts:
-#  - username: admin
-#    password: cisco
-#    privilege_level: 15
-
 # enable Multicast RP to be configured on the distribution switch
 enable_multicast_rp: yes
 
 # set the desired routing protocol
 routing_protocol: eigrp
-
-# Configure the SNMP read-only and read-write community strings for use with
-# network management tools.  Change the lines below to set the appropriate
-# read-only or read-write value
-#
-snmp_read_only_name: public
-snmp_read_write_name: private
 
 # Secure the management plane with an ACL.  Configure the ACL name and the list
 # of network subnets to allow to access the device.  The ACL prefixes should in
@@ -53,39 +15,6 @@ snmp_read_write_name: private
 # management_acl_name: MANAGEMENT
 # management_permitted_networks:
 #   - 10.4.95.0/24
-
-# Configure TACACS+ to perform authentication of user accounts against one or
-# more TACACS+ servers in a group.  Use the following settings to assing the
-# server group name and servers
-#
-# tacacs_server_group_name: TACACS-SERVERS
-# tacacs_servers:
-#   - name: TACACS-SERVER-1
-#     address: 10.4.48.14
-#     key: tacman
-
-
-# Configure the NTP servers and clock settings on the switch.
-#
-# The following variables will configure clock settings on the switch for
-# setting timezone, offset and summer time values.  Please see the device
-# configuration guide for a list of valid values.
-#
-clock_timezone: PST
-clock_offset: -8
-clock_summer_time: PDT
-
-# Configues the list of NTP servers to sync the device clock with.  Uncomment
-# the lines below to use the available public NTP servers or use private NTP
-# servers.  To use other publicly available geographically deployed NTP servers
-# see http://www.pool.ntp.org/en/
-#
-# The list of NTP servers can be either FQDN or IPv4 address
-# ntp_servers:
-#   - 0.us.pool.ntp.org
-#   - 1.us.pool.ntp.org
-#   - 2.us.pool.ntp.org
-#   - 3.us.pool.ntp.org
 
 # Configure a DHCP server on the distribution devices.  The example values
 # below are provided in the CVD document and can be modified to meet site
@@ -108,7 +37,7 @@ etherchannel_protocol: lacp
 #
 # eigrp_name: LAN
 # eigrp_as: 100
-# eigrp_router_id: "{{ loopback0_ipv4 }}"
+# eigrp_router_id: "{{ cvd_loopback0_ipv4 }}"
 # eigrp_networks:
 #   - 10.4.0.0/20
 #   - 10.4.0.0/15
@@ -149,7 +78,7 @@ multicast_permitted_sources:
 # the router.
 #
 oob_interface: GigabitEthernet1/0/32
-oob_interface_ipv4_addr: 172.16.33.4/24
+oob_interface_ipv4: 172.16.33.4/24
 oob_default_gateway: 172.16.33.1
 
 # Configure the OSPF routing protocol.  The following values can be used to set
@@ -160,6 +89,149 @@ oob_default_gateway: 172.16.33.1
 # ospf_router_id:
 # ospf_networks:
 # ospf_summaries:
+
+# Configure the router port channel interfaces.  This list accepts a list of
+# hashed values that provide settings for creating Etherchannels
+#
+# struct
+# {
+#   channel_id: <str>
+#   type: <str>
+#   members: <list>
+# }
+# portchannels: []
+#
+
+anti_vlan_hop: 999
+anti_vlan_hop_name: AntiVLANHop
+
+###############################################################################
+#
+# Configure common device settings
+#
+###############################################################################
+
+# Configure the device model.  This value is used to handle device specific
+# configuration settings and should be configured on a per host basis.  The
+# value values for device_model are '3850', '3650', '2960', '4500', '6500',
+# '6800'
+#
+# device_model: null
+
+# Configure the device role.  This setting defines how the device should be
+# configured.  Valid values for this variable include 'access' or
+# 'distribution'.  This value is required.
+#
+# device_role: null
+
+
+# Configure the device hostname.  Use the value below to configure the hosntame
+# of the device.  By default, the inventory_hostname_short value will be used.
+#
+# hostname: {{ inventory_hostname_short }}
+
+# Configure the list of DNS name servers to use for name lookups.  Below is an
+# example of setting the DNS name servers.  Name servers can be configured
+# using either FQDN or IPv4 address format.
+#
+name_servers:
+  - 10.4.48.10
+
+# Configure the default domain name used when constructing the device's fully
+# qualified domain name.  This value will also be used as the defaule domain
+# name for performing name resolution
+#
+domain_name: cisco.local
+
+# Configure the enable mode secret password.  Uncomment the line below to
+# configure the enable mode password.  The value for the password should be
+# provided in plain text.
+#
+# enable_secret: C1sco123
+
+# Configure the list of local user accounts to create on the switches.  The
+# list of accounts must define the following values:
+#
+# username: The name used to login to the device
+# password: The plain text password to set for the user
+# privilege_level: An integer value in the range of 0 to 15
+#
+#local_accounts:
+#  - username: admin
+#    password: cisco
+#    privilege_level: 15
+
+# Configure the SNMP read-only and read-write community strings for use with
+# network management tools.  Change the lines below to set the appropriate
+# read-only or read-write value
+#
+snmp_read_only_name: public
+snmp_read_write_name: private
+
+# Configure TACACS+ to perform authentication of user accounts against one or
+# more TACACS+ servers in a group.  Use the following settings to assing the
+# server group name and servers
+#
+# tacacs_server_group_name: TACACS-SERVERS
+# tacacs_servers:
+#   - name: TACACS-SERVER-1
+#     address: 10.4.48.14
+#     key: tacman
+
+# Configure the NTP servers and clock settings on the switch.
+#
+# The following variables will configure clock settings on the switch for
+# setting timezone, offset and summer time values.  Please see the device
+# configuration guide for a list of valid values.
+#
+clock_timezone: PST
+clock_offset: -8
+clock_summer_time: PDT
+
+# Configues the list of NTP servers to sync the device clock with.  Uncomment
+# the lines below to use the available public NTP servers or use private NTP
+# servers.  To use other publicly available geographically deployed NTP servers
+# see http://www.pool.ntp.org/en/
+#
+# The list of NTP servers can be either FQDN or IPv4 address
+# ntp_servers:
+#   - 0.us.pool.ntp.org
+#   - 1.us.pool.ntp.org
+#   - 2.us.pool.ntp.org
+#   - 3.us.pool.ntp.org
+
+
+
+
+
+
+
+###############################################################################
+#
+# Configure Access switch settings
+#
+###############################################################################
+
+# Configure VLANS on the switch.  The settings define the data and voice vlan
+# configuration values.  These values should be provided on a per-host basis.
+#
+# data_vlan: null
+# data_vlan_name: Data
+# voice_vlan: null
+# voice_vlan_name: Voice
+
+# Configure the in-band management interface.  These values configure an
+# in-band management vlan on the access switch.  If the management_vlan is not
+# specified, the in-band SVI will not be created.
+#
+# management_vlan: null
+# management_vlan_name: Management
+# management_vlan_address: null
+
+# Configure the IPv6 First Hop Security global policy.  This setting defines
+# the policy name to configure.
+#
+# ra_guard_policy_name: HOST_POLICY
 
 # Configure the router interfaces as access ports.  This value accepts a list of
 # of ports to be set as access ports and have all services applied as defined
@@ -175,13 +247,28 @@ oob_default_gateway: 172.16.33.1
 #
 # uplink_ports: []
 
-# Configure the router port channel interfaces.  This list accepts a list of
-# hashed values that provide settings for creating Etherchannels
+# Configure switch stack values.  These values are used to define the preferred
+# active switch and the preferred hot-standby switch.  These values should be
+# provided on a per host basis
 #
-# struct
-# {
-#   channel_id: <str>
-#   type: <str>
-#   members: <list>
-# }
-# portchannels: []
+# stack_config:
+#   - switch_id: 1
+#     priority: 1
+#   - switch_id: 2
+#     priority: 15
+#   - switch_id: 3
+#     priority: 14
+
+
+###############################################################################
+#
+# Configure Distribution switch settings
+#
+###############################################################################
+
+# Configure the Vlans necessary on the distribution device.  This set of vlans
+# should include all vlans defined on access devices in addition to any
+# distribution device specific vlans.  Please see the CVD document for more
+# details.
+#
+# vlans: []
