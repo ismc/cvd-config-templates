@@ -24,6 +24,27 @@ cvd_settings_distribution_switch_procedures:
   - procedure_7
   - procedure_8
 
+# This setting provides the acceptable list of device models supported by this
+# role.  The device model is a required value that must be set in order for
+# this role to operate correctly.  to set the value of the device model,
+# configure the device_model in inventory.
+cvd_settings_device_models:
+  - 2960
+  - 3650
+  - 3850
+  - 4500
+  - 6500
+  - 6800
+  - 9300
+
+# this setting provies the acceptable list of device roles supported by this
+# Ansible role  The device role is a required value that must be set in order
+# for the Ansible role to work properly.  To set the value of the device host,
+# configure device_role in inventory.
+cvd_settings_device_roles:
+  - access
+  - distribution
+
 # this setting will control whether or not the Multicast RP function will be
 # configured or not on the distribution switch.  When this value is True, the
 # RP function will be configured and when this value is False, the RP function
@@ -43,7 +64,6 @@ cvd_settings_routing_protocol: "{{ routing_protocol | default(None) }}"
 # server to be configured.  See the DHCP Server configuration settings to
 # configure the DHCP server values
 cvd_settings_enable_dhcp_server: "{{ enable_dhcp_server | bool | default(False) }}"
-
 
 
 ###############################################################################
@@ -67,7 +87,7 @@ cvd_settings_enable_dhcp_server: "{{ enable_dhcp_server | bool | default(False) 
 cvd_device_model: "{{ device_model | default(None) }}"
 cvd_device_role: "{{ device_role | default(None) }}"
 
-cvd_hostname: "{{ hostname | inventory_hostname_short }}"
+cvd_hostname: "{{ hostname | default(inventory_hostname_short) }}"
 cvd_name_servers: "{{ name_servers | default([]) }}"
 cvd_domain_name: "{{ domain_name | default(None) }}"
 
@@ -95,9 +115,9 @@ cvd_tacacs_server_group_name: "{{ tacacs_server_group_name | default(None) }}"
 
 cvd_ntp_servers: "{{ ntp_servers | default([]) }}"
 
-cvd_clock_timezone:  "{{ clock_timezone }}"
-cvd_clock_offset: "{{ clock_offset | string }}"
-cvd_clock_summer_time: "{{ clock_summer_time }}"
+cvd_clock_timezone:  "{{ clock_timezone | default(None) }}"
+cvd_clock_offset: "{{ clock_offset | string | default(None) }}"
+cvd_clock_summer_time: "{{ clock_summer_time | default(None) }}"
 
 # Configure common device settings
 #
@@ -124,8 +144,18 @@ cvd_oob_interface_ipv4_addr: "{{ oob_interface_ipv4_addr | default(None) }}"
 cvd_oob_default_gateway: "{{ oob_default_gateway | default(None) }}"
 
 # FIXME:
-cvd_loopback0_address: "{{ loopback0 | default(None) }}"
+cvd_loopback0_ipv4: "{{ loopback0_ipv4 | default(None) }}"
 cvd_loopback1: "{{ loopback0 | default(None) }}"
+
+# configure vlans on the distribution device
+# struct
+# {
+#   vlan_id: <int>
+#   description: <str>
+#   name: <name>
+#   ipv4: <address/prefixlen>
+# }
+cvd_vlans: "{{ vlans | default([]) }}"
 
 # DHCP Server configuration values
 #
@@ -206,3 +236,5 @@ cvd_uplink_ports: "{{ uplink_ports | default([]) }}"
 #   priority: <int>
 # }
 cvd_stack_config: "{{ stack_config | default([]) }}"
+
+cvd_vss_domain: null

@@ -1,8 +1,13 @@
 ---
-- name: check for required fact device_role
+- name: check the value of required fact cvd_device_role
   fail:
     msg: "missing or invalid fact: device_role"
-  when: device_role is not defined or device_role not in ['access', 'distribution']
+  when: cvd_device_role is not defined or cvd_device_role not in cvd_settings_device_roles
+
+- name: check the value of required fact cvd_device_model
+  fail:
+    msg: "missing or invalid fact: device_model"
+  when: cvd_device_model is not defined or cvd_device_model not in cvd_settings_device_models
 
 - name: get the current running-config from the device
   ios_command:
