@@ -1,4 +1,12 @@
 ---
+- name: display device model
+  debug:
+    msg: "device model is {{ cvd_device_model }}"
+
+- name: display device role
+  debug:
+    msg: "device role is {{ cvd_device_role }}"
+
 - name: create destination path (if necssary)
   file:
     path: "{{ dest }}/{{ item.path }}"
