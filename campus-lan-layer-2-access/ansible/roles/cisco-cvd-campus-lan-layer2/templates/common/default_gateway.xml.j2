@@ -1,6 +1,6 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
     {% if cvd_default_gateway %}
     {% if model|string not in ['4500', '6500'] %}
     <ip>
@@ -20,6 +20,5 @@
     </ip>
     {% endif %}
     {% endif %}
-
   </native>
 </config>

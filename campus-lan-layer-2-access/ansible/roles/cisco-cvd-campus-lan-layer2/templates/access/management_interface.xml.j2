@@ -1,9 +1,9 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
       <interface>
         <Vlan>
           <name>{{ cvd_management_vlan_id }}</name>
-
           <ip>
             <address>
               <primary>
@@ -12,7 +12,6 @@
               </primary>
             </address>
           </ip>
-
         </Vlan>
       </interface>
   </native>

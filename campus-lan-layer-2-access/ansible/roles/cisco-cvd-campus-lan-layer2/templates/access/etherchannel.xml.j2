@@ -1,28 +1,23 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for interface in cvd_uplink_ports %}
       {% set index = interface | interface_split('index') %}
       {% set item = cvd_port_channels | selectattr('channel_id', 'equalto', index) | first %}
-
       {% for member in item.members | default([]) %}
       <{{ member | interface_split('name') }}>
         <name>{{ member | interface_split('index') }}</name>
         <description>{{ interface ~ " Member" }}</description>
-
         <load-interval>30</load-interval>
-
         <logging>
           <event>
             <bundle-status/>
             <link-status/>
           </event>
         </logging>
-
         <channel-group xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
           <number>{{ item.channel_id | interface_split('index') }}</number>
-
           {% if cvd_etherchannel_protocol == 'lacp' %}
           <mode>active</mode>
           {% elif cvd_etherchannel_protocol == 'pagp' %}
@@ -30,15 +25,11 @@
           {% else %}
           <mode>on</mode>
           {% endif %}
-
         </channel-group>
-
         <channel-protocol xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">{{ cvd_etherchannel_protocol }}</channel-protocol>
-
       </{{ member | interface_split('name') }}>
       {% endfor %}
       {% endfor %}
-
     </interface>
   </native>
 </config>

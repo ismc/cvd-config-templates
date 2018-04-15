@@ -1,8 +1,8 @@
+#jinja2: lstrip_blocks: True
 {% set interfaces = [] %}
 {% for item in cvd_access_ports %}
   {% set _ = interfaces.extend(item | interface_range) %}
 {% endfor %}
-
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>

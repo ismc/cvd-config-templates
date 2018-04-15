@@ -1,6 +1,6 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
     {% if cvd_enable_secret %}
     <enable>
       <secret>
@@ -9,7 +9,6 @@
       </secret>
     </enable>
     {% endif %}
-
     {% for item in cvd_local_accounts %}
     <username>
       <name>{{ item.username }}</name>
@@ -20,14 +19,11 @@
       </secret>
     </username>
     {% endfor %}
-
     <service>
       <password-encryption/>
     </service>
-
     <aaa>
       <new-model xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa"/>
     </aaa>
-
   </native>
 </config>

@@ -1,11 +1,9 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
-
-
     {% for interface in cvd_uplink_ports %}
     {% set index = interface | interface_split('index') %}
     {% set item = cvd_port_channels | selectattr('channel_id', 'equalto', index) | first %}
-
     {% for member in item.members | default([]) %}
     <interface>
       <{{ member | interface_split('name') }}>
@@ -20,7 +18,6 @@
         <description>{{ interface ~ " Member" }}</description>
       </{{ member | interface_split('name') }}>
     </interface>
-
     <interface>
       <Port-channel>
         <name>{{ interface | interface_split('index') }}</name>
@@ -35,8 +32,6 @@
       </Port-channel>
     </interface>
     {% endfor %}
-
     {% endfor %}
-
   </native>
 </config>

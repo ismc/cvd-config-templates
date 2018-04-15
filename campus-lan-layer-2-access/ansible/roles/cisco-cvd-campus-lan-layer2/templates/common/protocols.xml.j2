@@ -1,3 +1,4 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <ip>
@@ -5,26 +6,21 @@
         <server>false</server>
         <secure-server>true</secure-server>
       </http>
-
       {% if cvd_domain_name %}
       <domain>
         <name>{{ cvd_domain_name }}</name>
         <lookup>true</lookup>
       </domain>
       {% endif %}
-
       <ssh>
         <version>2</version>
       </ssh>
-
       <scp>
         <server>
           <enable/>
         </server>
       </scp>
-
     </ip>
-
     <line>
       <vty>
         <first>0</first>
@@ -38,7 +34,6 @@
           </preferred>
         </transport>
       </vty>
-
       <vty>
         <first>5</first>
         <last>15</last>
@@ -52,6 +47,5 @@
         </transport>
       </vty>
     </line>
-
   </native>
 </config>

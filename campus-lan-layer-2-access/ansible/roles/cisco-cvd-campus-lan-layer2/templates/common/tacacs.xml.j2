@@ -1,3 +1,4 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <tacacs>
@@ -14,10 +15,8 @@
       </server>
       {% endfor %}
     </tacacs>
-
     <aaa>
       <new-model xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa"/>
-
       {% if cvd_tacacs_server_group_name %}
       <group xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa">
         <server>
@@ -32,7 +31,6 @@
         </server>
       </group>
       {% endif %}
-
       <authentication xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa">
         <login>
           <name>default</name>
@@ -44,7 +42,6 @@
           </a2>
         </login>
       </authentication>
-
       <authorization xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-aaa">
         <exec>
           <name>default</name>
@@ -58,7 +55,6 @@
         <console/>
       </authorization>
     </aaa>
-
     <ip>
       <http xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-http">
         <authentication>
@@ -66,6 +62,5 @@
         </authentication>
       </http>
     </ip>
-
   </native>
 </config>

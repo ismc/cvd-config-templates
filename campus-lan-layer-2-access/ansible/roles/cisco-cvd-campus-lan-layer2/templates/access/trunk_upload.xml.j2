@@ -1,21 +1,18 @@
+#jinja2:lstrip_blocks: True
 <config>
   <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
     <interface>
-
       {% for interface in cvd_uplink_ports %}
       {% set index = interface | interface_split('index') %}
       {% set item = cvd_port_channels | selectattr('channel_id', 'equalto', index) | first %}
-
       {% for member in item.members | default([]) %}
       <{{ member | interface_split('name') }}>
         <name>{{ member | interface_split('index') }}</name>
         <description>{{ interface ~ " Member" }}</description>
-
         <switchport>
           <mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <trunk/>
           </mode>
-
           <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <allowed>
               <vlan>
@@ -24,23 +21,19 @@
             </allowed>
           </trunk>
         </switchport>
-
         <ip>
           <arp>
             <inspection>
               <trust/>
             </inspection>
           </arp>
-
           <dhcp>
             <snooping xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-dhcp">
               <trust/>
             </snooping>
           </dhcp>
         </ip>
-
         <load-interval>30</load-interval>
-
         <logging>
           <event>
             <link-status/>
@@ -49,16 +42,13 @@
         </logging>
       </{{ member | interface_split('index') }}>
       {% endfor %}
-
       <Port-channel>
         <name>{{ interface | interface_split('index') }}</name>
         <description>Link to Distribution Layer</description>
-
         <switchport>
           <mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <trunk/>
           </mode>
-
           <trunk xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
             <allowed>
               <vlan>
@@ -67,23 +57,19 @@
             </allowed>
           </trunk>
         </switchport>
-
         <ip>
           <arp>
             <inspection>
               <trust/>
             </inspection>
           </arp>
-
           <dhcp>
             <snooping xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-dhcp">
               <trust/>
             </snooping>
           </dhcp>
         </ip>
-
         <load-interval>30</load-interval>
-
         <logging>
           <event>
             <link-status/>
@@ -92,7 +78,6 @@
         </logging>
       </Port-channel>
       {% endfor %}
-
     </interface>
   </native>
 </config>
