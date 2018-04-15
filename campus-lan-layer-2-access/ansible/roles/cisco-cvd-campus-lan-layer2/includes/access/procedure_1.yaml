@@ -21,7 +21,6 @@
   block:
     - name: "push config to remotes ['3850','9300','3650']"
       ios_config:
-        save_when: never
         running_config: "{{ configuration.stdout }}"
         lines:
           - "macro name AccessEdgeQoS\r trust device cisco-phone\r service-policy input CISCO-PHONE\r service-policy operation 2P6Q3T\r@\rmacro name EgressQoS\r service-policy operation 2P6Q3T\r@\r"
@@ -31,8 +30,6 @@
     - name: "push config to remotes ['2960']"
       ios_config:
         running_config: "{{ configuration.stdout }}"
-        save_when: never
-        provider: "{{ provider }}"
         lines:
           - "EgressQoS\r mls qos trust dscp\n queue-set 1\r srr-queue bandwidth share 1 30 35 5\r priority-queue out\r@\r"
       when: cvd_device_model | string in ['2960']
@@ -41,19 +38,15 @@
     - name: "push config to remotes ['4500']"
       ios_config:
         running_config: "{{ configuration.stdout }}"
-        save_when: never
-        provider: "{{ provider }}"
         lines:
           - "macro name AccessEdgeQoS\r auto qos voip cisco-phone\r@\rmacro name EgressQoS\r service-policy operation 1P7Q1T\r@\r"
       when: cvd_device_model | string in ['4500']
       connection: network_cli
-      register: operation
 
     - name: wait an arbitrary period for config sync
       pause:
         prompt: "Wait for configuration synchronization."
         seconds: 60
-      when: operation is changed
   connection: network_cli
 
 - name: push macro configs to all devices except Catalyst 2960

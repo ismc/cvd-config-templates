@@ -10,7 +10,7 @@
 
 - name: configure the default gateway
   netconf_config:
-    xml: "{{ lookup('template', 'templates/common/gateway.xml.j2') }}"
+    xml: "{{ lookup('template', 'templates/common/default_gateway.xml.j2') }}"
   when: cvd_default_gateway
 
 - name: configure dhcp snooping on the data and voice vlans

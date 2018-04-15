@@ -1,5 +1,5 @@
 ---
-- name: procedure 5 - configure access ports macro
+- name: configure access ports macro
   ios_config:
     lines: "{{ lookup('template', 'templates/access/access_ports_macro.cfg.j2').splitlines() }}"
     save_when: never
@@ -10,7 +10,7 @@
     desired_macro: EgressQoS
   register: operation
 
-- name: procedure 5 wait an arbitrary period for config sync
+- name: wait an arbitrary period for config sync
   pause:
     prompt: "wait for configuration synchronization."
     seconds: 60

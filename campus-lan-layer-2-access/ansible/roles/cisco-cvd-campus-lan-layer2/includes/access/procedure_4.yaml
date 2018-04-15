@@ -14,7 +14,6 @@
   ios_config:
     lines: switchport host
     parents: "interface range {{ item }}"
-    save_when: never
     running_config: "{{ configuration.stdout }}"
   with_items: "{{ cvd_access_ports }}"
   when: cvd_access_ports
